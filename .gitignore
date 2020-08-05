@@ -1,0 +1,9 @@
+.next/
+build/
+**/keys/
+node_modules/
+.keys/
+.env
+.env.*
+.DS_Store
+public/scripts/*.built.js

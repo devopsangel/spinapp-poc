@@ -1,0 +1,46 @@
+{
+    "name": "turtle",
+    "version": "1.0.0",
+    "description": "Inventory Aging",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "nodemon server.js",
+        "build": "next build",
+        "start": "NODE_ENV=production node server.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+"
+    },
+    "keywords": [
+        "zoocommerce",
+        "shopify",
+        "turtle",
+        "inventory aging"
+    ],
+    "author": "Zookeeper @Zoocommerce",
+    "license": "ISC",
+    "dependencies": {
+        "@shopify/koa-shopify-auth": "^3.1.65",
+        "@shopify/koa-shopify-graphql-proxy": "^4.0.1",
+        "@shopify/koa-shopify-webhooks": "^2.4.3",
+        "@shopify/polaris": "^5.1.0",
+        "dotenv": "^8.2.0",
+        "isomorphic-fetch": "^2.2.1",
+        "koa": "^2.13.0",
+        "koa-logger": "^3.2.1",
+        "koa-router": "^9.1.0",
+        "koa-session": "^6.0.0",
+        "next": "^9.5.1",
+        "react": "^16.13.1",
+        "react-dom": "^16.13.1",
+        "shopify-jwt-auth-verify": "^1.0.8"
+    },
+    "devDependencies": {
+        "eslint": "^5.16.0",
+        "eslint-plugin-react": "^7.20.5",
+        "eslint-plugin-shopify": "^27.0.1",
+        "nodemon": "^2.0.4"
+    }
+}
