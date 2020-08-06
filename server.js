@@ -33,6 +33,8 @@ const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
     const server = new Koa();
+    const router = new Router();
+
     server.use(logger());
     server.use(session({ sameSite: 'none', secure: true }, server));
     server.keys = [SHOPIFY_API_SECRET_KEY];
@@ -71,12 +73,21 @@ app.prepare().then(() => {
     server.use(webhookRouter.routes());
     server.use(webhookRouter.allowedMethods());
 
-    server.use(graphQLProxy({ version: ApiVersion.October19 }));
     server.use(verifyRequest());
 
     //	billing routes
     server.use(billingRouter.routes());
     server.use(billingRouter.allowedMethods());
+
+    server.use(graphQLProxy({ version: ApiVersion.October19 }));
+    router.get('(.*)', verifyRequest(), async (ctx) => {
+        await handle(ctx.req, ctx.res);
+        ctx.respond = false;
+        ctx.res.statusCode = 200;
+    });
+
+    server.use(router.allowedMethods());
+    server.use(router.routes());
 
     server.listen(port, () => {
         if (dev) {

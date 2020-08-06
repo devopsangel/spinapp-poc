@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { EmptyState, Layout, Page } from '@shopify/polaris';
 
-class Index extends Component {
+class Home extends Component {
     render() {
         return (
             <Page>
@@ -21,4 +21,4 @@ class Index extends Component {
     }
 }
 
-export default Index;
+export default Home;
