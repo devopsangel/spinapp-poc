@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { EmptyState, Layout, Page } from '@shopify/polaris';
-import { ResourcePicker, TitleBar } from '@shopify/app-bridge-react';
 
 class Index extends Component {
     render() {

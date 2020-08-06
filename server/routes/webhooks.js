@@ -11,8 +11,8 @@ module.exports = () => {
     // app/uninstalled
     router.post('/app/uninstalled', webhook, async (ctx) => {
         const shop = ctx.request.header['x-shopify-shop-domain'];
+        console.log(`> [INFO] Received webhook -- shop <${shop}>`);
         await appUninstall({ shop });
-        console.log(`> [INFO] received webhook -- shop <${shop}>:<${ctx.state.webhook}>`);
     });
 
     return router;

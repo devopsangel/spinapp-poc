@@ -8,6 +8,7 @@ const { default: createShopifyAuth } = require('@shopify/koa-shopify-auth');
 const { verifyRequest } = require('@shopify/koa-shopify-auth');
 const session = require('koa-session');
 const logger = require('koa-logger');
+const bodyParser = require('koa-bodyparser');
 
 const { default: graphQLProxy } = require('@shopify/koa-shopify-graphql-proxy');
 const { ApiVersion } = require('@shopify/koa-shopify-graphql-proxy');
@@ -65,16 +66,17 @@ app.prepare().then(() => {
         }),
     );
 
+    //  webhook routes
+    server.use(bodyParser());
+    server.use(webhookRouter.routes());
+    server.use(webhookRouter.allowedMethods());
+
     server.use(graphQLProxy({ version: ApiVersion.October19 }));
     server.use(verifyRequest());
 
     //	billing routes
     server.use(billingRouter.routes());
     server.use(billingRouter.allowedMethods());
-
-    //  webhook routes
-    server.use(webhookRouter.routes());
-    server.use(webhookRouter.allowedMethods());
 
     server.listen(port, () => {
         if (dev) {
