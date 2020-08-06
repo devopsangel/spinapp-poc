@@ -1,7 +1,25 @@
-const Index = () => (
-    <div>
-        <p>Sample app using React and Next.js</p>
-    </div>
-);
+import React, { Component } from 'react';
+import { EmptyState, Layout, Page } from '@shopify/polaris';
+import { ResourcePicker, TitleBar } from '@shopify/app-bridge-react';
+
+class Index extends Component {
+    render() {
+        return (
+            <Page>
+                <Layout>
+                    <EmptyState
+                        heading='Poka ne ponyatno'
+                        action={{
+                            content: 'Testing',
+                        }}
+                        image='https://cdn.shopify.com/s/files/1/0757/9955/files/empty-state.svg'
+                    >
+                        <p>Testing new app structure</p>
+                    </EmptyState>
+                </Layout>
+            </Page>
+        );
+    }
+}
 
 export default Index;

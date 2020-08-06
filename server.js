@@ -8,12 +8,25 @@ const { verifyRequest } = require('@shopify/koa-shopify-auth');
 const session = require('koa-session');
 const logger = require('koa-logger');
 
-//	environment variables
+const { default: graphQLProxy } = require('@shopify/koa-shopify-graphql-proxy');
+const { ApiVersion } = require('@shopify/koa-shopify-graphql-proxy');
+const Router = require('koa-router');
+
+// installing app and other properties
+const installApp = require('./server/util/install-app');
+
+// helper to retrieve billing confirmation url
+const getSubscriptionUrl = require('./server/util/billing-confirmation');
+
+// custom routes
+// const webhookRouter = require('./server/routes/webhooks')(Router);
+const billingRouter = require('./server/routes/billing')(Router);
+
+// environment variables
 dotenv.config();
 const { SHOPIFY_API_SECRET_KEY, SHOPIFY_API_KEY, APP_HOST } = process.env;
 const port = parseInt(process.env.PORT, 10) || 8080;
 const dev = process.env.NODE_ENV !== 'production';
-
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
@@ -38,17 +51,22 @@ app.prepare().then(() => {
                     sameSite: 'none',
                 });
 
-                ctx.redirect('/');
+                 // register the shop in Firestore
+                const installResponse = await installApp({ accessToken, shop });
+                if (installResponse.status === 201) {
+                    // present user with billing options
+                    await getSubscriptionUrl(ctx, accessToken, shop);
+                }
             },
         }),
     );
 
+    server.use(graphQLProxy({ version: ApiVersion.October19 }));
     server.use(verifyRequest());
-    server.use(async (ctx) => {
-        await handle(ctx.req, ctx.res);
-        ctx.respond = false;
-        ctx.res.statusCode = 200;
-    });
+
+    //	billing routes
+    server.use(billingRouter.routes());
+    server.use(billingRouter.allowedMethods());
 
     server.listen(port, () => {
         if (dev) {
