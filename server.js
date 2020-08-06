@@ -20,7 +20,7 @@ const installApp = require('./server/utils/install-app');
 const getSubscriptionUrl = require('./server/utils/billing-confirmation');
 
 // custom routes
-// const webhookRouter = require('./server/routes/webhooks')(Router);
+const webhookRouter = require('./server/routes/webhooks')(Router);
 const billingRouter = require('./server/routes/billing')(Router);
 
 // environment variables
@@ -52,7 +52,11 @@ app.prepare().then(() => {
                 });
 
                 // register the shop in Firestore
-                const installResponse = await installApp({ accessToken, shop, APP_HOST });
+                const installResponse = await installApp({
+                    accessToken,
+                    shop,
+                    APP_HOST,
+                });
                 if (installResponse.status === 201) {
                     // present user with billing options
                     await getSubscriptionUrl(ctx, accessToken, shop, APP_HOST);
@@ -67,6 +71,10 @@ app.prepare().then(() => {
     //	billing routes
     server.use(billingRouter.routes());
     server.use(billingRouter.allowedMethods());
+
+    //  webhook routes
+    server.use(webhookRouter.routes());
+    server.use(webhookRouter.allowedMethods());
 
     server.listen(port, () => {
         if (dev) {

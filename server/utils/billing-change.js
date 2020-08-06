@@ -12,7 +12,7 @@ module.exports = () => {
                 );
             } else {
                 const db = admin.firestore();
-                const shopRef = db.collection('turtle_shops').doc(shop.split('.')[0]);
+                const shopRef = db.collection('turtleShops').doc(shop.split('.')[0]);
 
                 //	make sure shop doesn't exist to avoid dupes
                 await shopRef
