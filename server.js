@@ -1,5 +1,6 @@
 require('isomorphic-fetch');
 const dotenv = require('dotenv');
+dotenv.config();
 
 const Koa = require('koa');
 const next = require('next');
@@ -13,17 +14,16 @@ const { ApiVersion } = require('@shopify/koa-shopify-graphql-proxy');
 const Router = require('koa-router');
 
 // installing app and other properties
-const installApp = require('./server/util/install-app');
+const installApp = require('./server/utils/install-app');
 
 // helper to retrieve billing confirmation url
-const getSubscriptionUrl = require('./server/util/billing-confirmation');
+const getSubscriptionUrl = require('./server/utils/billing-confirmation');
 
 // custom routes
 // const webhookRouter = require('./server/routes/webhooks')(Router);
 const billingRouter = require('./server/routes/billing')(Router);
 
 // environment variables
-dotenv.config();
 const { SHOPIFY_API_SECRET_KEY, SHOPIFY_API_KEY, APP_HOST } = process.env;
 const port = parseInt(process.env.PORT, 10) || 8080;
 const dev = process.env.NODE_ENV !== 'production';
@@ -43,7 +43,7 @@ app.prepare().then(() => {
             // scopes: ['read_products', 'write_products', 'read_orders', 'read_all_orders'],
             scopes: ['read_products', 'write_products', 'read_orders'],
             accessMode: 'offline',
-            afterAuth(ctx) {
+            afterAuth: async (ctx) => {
                 const { shop, accessToken } = ctx.session;
                 ctx.cookies.set('shopOrigin', shop, {
                     httpOnly: false,
@@ -51,11 +51,11 @@ app.prepare().then(() => {
                     sameSite: 'none',
                 });
 
-                 // register the shop in Firestore
-                const installResponse = await installApp({ accessToken, shop });
+                // register the shop in Firestore
+                const installResponse = await installApp({ accessToken, shop, APP_HOST });
                 if (installResponse.status === 201) {
                     // present user with billing options
-                    await getSubscriptionUrl(ctx, accessToken, shop);
+                    await getSubscriptionUrl(ctx, accessToken, shop, APP_HOST);
                 }
             },
         }),

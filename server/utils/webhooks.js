@@ -1,6 +1,5 @@
 const { registerWebhook } = require('@shopify/koa-shopify-webhooks');
 const { ApiVersion } = require('@shopify/koa-shopify-graphql-proxy');
-
 const { APP_HOST } = process.env;
 
 module.exports = () => {

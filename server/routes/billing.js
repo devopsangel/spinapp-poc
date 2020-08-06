@@ -1,9 +1,9 @@
-const Router = require('@koa/router');
+const Router = require('koa-router');
 const axios = require('axios');
 
-const { SHOPIFY_API_VERSION, APP_HOST } = process.env;
+const { SHOPIFY_API_VERSION, SHOPIFY_API_KEY, APP_HOST } = process.env;
 
-const { activate } = require('../util/billing-change.js')();
+const { activate } = require('../utils/billing-change.js')();
 
 module.exports = () => {
     const router = new Router({ prefix: '/billing' });
@@ -36,7 +36,7 @@ module.exports = () => {
             ctx.statusCode = 200;
         }
 
-        ctx.redirect(`${APP_HOST}?shopOrigin=${shop}`);
+        ctx.redirect(`https://${shop}/admin/apps/${SHOPIFY_API_KEY}`);
     });
 
     return router;
