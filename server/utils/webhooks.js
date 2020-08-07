@@ -8,14 +8,13 @@ module.exports = () => {
         const registration = await registerWebhook({
             address: `${APP_HOST}/webhooks/${topic}`,
             topic: topicName,
-            format: 'json',
             accessToken,
             shop,
             apiVersion: ApiVersion.October19,
         });
 
         if (registration.success) {
-            console.log('> [INFO] Successfully registered webhook!', topic);
+            console.log('> [INFO] Successfully registered webhook -', topic);
         } else {
             console.log('> [ERR] Failed to register webhook', registration.result);
         }

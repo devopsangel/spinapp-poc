@@ -26,7 +26,7 @@ const billingRouter = require('./server/routes/billing')(Router);
 const dataRouter = require('./server/routes/data')(Router);
 
 // environment variables
-const { SHOPIFY_API_SECRET_KEY, SHOPIFY_API_KEY, APP_HOST } = process.env;
+const { SHOPIFY_API_SECRET_KEY, SHOPIFY_API_KEY, APP_HOST, APP_SCOPE } = process.env;
 const port = parseInt(process.env.PORT, 10) || 8080;
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -44,8 +44,7 @@ app.prepare().then(() => {
         createShopifyAuth({
             apiKey: SHOPIFY_API_KEY,
             secret: SHOPIFY_API_SECRET_KEY,
-            // scopes: ['read_products', 'write_products', 'read_orders', 'read_all_orders'],
-            scopes: ['read_products', 'write_products', 'read_orders'],
+            scopes: APP_SCOPE.split(','),
             accessMode: 'offline',
             afterAuth: async (ctx) => {
                 const { shop, accessToken } = ctx.session;
