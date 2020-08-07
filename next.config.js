@@ -9,7 +9,7 @@ module.exports = {
         // config.plugins.push(new webpack.DefinePlugin(env));
         config.plugins.push(
             new webpack.DefinePlugin({
-                API_KEY: JSON.stringify(process.env.SHOPIFY_API_KEY),
+                'process.env.API_KEY': JSON.stringify(process.env.SHOPIFY_API_KEY),
             }),
         );
         return config;
