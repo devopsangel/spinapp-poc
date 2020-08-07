@@ -14,9 +14,10 @@ const client = new ApolloClient({
     },
 });
 
+// const apiKey = process.env.REACT_APP_API_KEY;
+
 class ZooApp extends App {
     render() {
-        console.log('API_KEY', API_KEY);
         const { Component, pageProps } = this.props;
         const config = {
             apiKey: API_KEY,
