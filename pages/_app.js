@@ -14,11 +14,11 @@ const client = new ApolloClient({
     },
 });
 
-class TurtleApp extends App {
+class ZooApp extends App {
     render() {
         const { Component, pageProps } = this.props;
         const config = {
-            apiKey: SHOPIFY_API_KEY,
+            apiKey: API_KEY,
             shopOrigin: Cookies.get('shopOrigin'),
             forceRedirect: true,
         };
@@ -41,4 +41,4 @@ class TurtleApp extends App {
     }
 }
 
-export default TurtleApp;
+export default ZooApp;
