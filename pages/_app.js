@@ -3,10 +3,10 @@ import Head from 'next/head';
 import { AppProvider } from '@shopify/polaris';
 import { Provider } from '@shopify/app-bridge-react';
 import Cookies from 'js-cookie';
-import '@shopify/polaris/dist/styles.css';
 import translations from '@shopify/polaris/locales/en.json';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
+import '@shopify/polaris/dist/styles.css';
 
 const client = new ApolloClient({
     fetchOptions: {
@@ -16,6 +16,7 @@ const client = new ApolloClient({
 
 class ZooApp extends App {
     render() {
+        console.log('API_KEY', API_KEY);
         const { Component, pageProps } = this.props;
         const config = {
             apiKey: API_KEY,
