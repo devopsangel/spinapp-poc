@@ -13,14 +13,13 @@ const client = new ApolloClient({
         credentials: 'include',
     },
 });
-
-// const apiKey = process.env.REACT_APP_API_KEY;
+const apiKey = process.env.REACT_APP_API_KEY;
 
 class ZooApp extends App {
     render() {
         const { Component, pageProps } = this.props;
         const config = {
-            apiKey: process.env.API_KEY,
+            apiKey,
             shopOrigin: Cookies.get('shopOrigin'),
             forceRedirect: true,
         };
