@@ -2,7 +2,12 @@ FROM node:14.7.0-buster
 
 LABEL maintainer="zookeeper@zoocommerce.tech"
 
-COPY  . /server
+ARG SRC_DIR=.
+
+ARG SHOPIFY_API_KEY_ARG=""
+ENV SHOPIFY_API_KEY=$SHOPIFY_API_KEY_ARG
+
+COPY  $SRC_DIR /server
 WORKDIR /server
 RUN npm i
 RUN npm run build
