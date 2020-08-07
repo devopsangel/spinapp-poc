@@ -7,4 +7,5 @@ WORKDIR /server
 RUN npm i
 RUN npm run build
 
-CMD ["npm", "run", "start"]
+# CMD ["npm", "run", "start"]
+ENTRYPOINT ["./entrypoint.sh"]
