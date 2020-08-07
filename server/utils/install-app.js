@@ -1,5 +1,5 @@
 const moment = require('moment');
-const firestore = require('../firestore.js');
+const firestore = require('../platform/firestore.js');
 const webhooks = require('./webhooks.js')();
 const getBulkProducts = require('./getbulk-products.js');
 const getShopInfo = require('./getshop-info.js');

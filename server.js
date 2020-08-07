@@ -23,6 +23,7 @@ const getSubscriptionUrl = require('./server/utils/billing-confirmation');
 // custom routes
 const webhookRouter = require('./server/routes/webhooks')(Router);
 const billingRouter = require('./server/routes/billing')(Router);
+const dataRouter = require('./server/routes/data')(Router);
 
 // environment variables
 const { SHOPIFY_API_SECRET_KEY, SHOPIFY_API_KEY, APP_HOST } = process.env;
@@ -68,16 +69,20 @@ app.prepare().then(() => {
         }),
     );
 
-    //  webhook routes
+    // webhook routes
     server.use(bodyParser());
     server.use(webhookRouter.routes());
     server.use(webhookRouter.allowedMethods());
 
     server.use(verifyRequest());
 
-    //	billing routes
+    // billing routes
     server.use(billingRouter.routes());
     server.use(billingRouter.allowedMethods());
+
+    // data routes
+    server.use(dataRouter.routes());
+    server.use(dataRouter.allowedMethods());
 
     server.use(graphQLProxy({ version: ApiVersion.October19 }));
     router.get('(.*)', verifyRequest(), async (ctx) => {

@@ -1,4 +1,4 @@
-const firestore = require('../firestore.js');
+const firestore = require('../platform/firestore.js');
 
 module.exports = () => {
     const appUninstall = async ({ shop }) => {
