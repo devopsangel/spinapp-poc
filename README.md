@@ -38,6 +38,6 @@ Supports inventory products aging.
 ## How to use
 
     - Start ngrok via ngrok http 3000 -subdomain=turtle
-        `./ngrok http 3000 -subdomain=turtle -bind-tls=true`
+        `./ngrok http 3000 -subdomain=turtle.local -bind-tls=true`
 
 ## Repository structure
