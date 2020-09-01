@@ -8,6 +8,8 @@ import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
 import '@shopify/polaris/dist/styles.css';
 
+// import { getSessionToken } from '@shopify/app-bridge-utils';
+
 const client = new ApolloClient({
     fetchOptions: {
         credentials: 'include',

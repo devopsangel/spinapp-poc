@@ -60,9 +60,12 @@ app.prepare().then(() => {
                     shop,
                     APP_HOST,
                 });
+
                 if (installResponse.status === 201) {
                     // present user with billing options
                     await getSubscriptionUrl(ctx, accessToken, shop, APP_HOST);
+                } else {
+                    ctx.redirect(`/apps/${SHOPIFY_API_KEY}`);
                 }
             },
         }),
