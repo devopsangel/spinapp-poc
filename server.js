@@ -65,7 +65,8 @@ app.prepare().then(() => {
                     // present user with billing options
                     await getSubscriptionUrl(ctx, accessToken, shop, APP_HOST);
                 } else {
-                    ctx.redirect(`/apps/${SHOPIFY_API_KEY}`);
+                    ctx.redirect('/');
+                    // ctx.redirect(`/apps/${SHOPIFY_API_KEY}`);
                 }
             },
         }),
