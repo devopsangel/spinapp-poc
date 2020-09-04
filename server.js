@@ -66,7 +66,6 @@ app.prepare().then(() => {
                     await getSubscriptionUrl(ctx, accessToken, shop, APP_HOST);
                 } else {
                     ctx.redirect('/');
-                    // ctx.redirect(`/apps/${SHOPIFY_API_KEY}`);
                 }
             },
         }),
@@ -87,7 +86,7 @@ app.prepare().then(() => {
     server.use(dataRouter.routes());
     server.use(dataRouter.allowedMethods());
 
-    server.use(graphQLProxy({ version: ApiVersion.October19 }));
+    server.use(graphQLProxy({ version: ApiVersion.April20 }));
     router.get('(.*)', verifyRequest(), async (ctx) => {
         await handle(ctx.req, ctx.res);
         ctx.respond = false;
