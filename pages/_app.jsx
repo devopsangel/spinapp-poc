@@ -5,6 +5,7 @@ import { Provider } from '@shopify/app-bridge-react';
 import Cookies from 'js-cookie';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
+import { RecoilRoot } from 'recoil';
 
 import '@shopify/polaris/dist/styles.css';
 import translations from '@shopify/polaris/locales/en.json';
@@ -27,7 +28,7 @@ class ZooApp extends App {
         };
 
         return (
-            <React.Fragment>
+            <React.StrictMode>
                 <Head>
                     <title>Inventory Aging</title>
                     <meta charSet='utf-8' />
@@ -35,11 +36,13 @@ class ZooApp extends App {
                 <Provider config={config}>
                     <AppProvider i18n={translations}>
                         <ApolloProvider client={client}>
-                            <Component {...pageProps} />
+                            <RecoilRoot>
+                                <Component {...pageProps} />
+                            </RecoilRoot>
                         </ApolloProvider>
                     </AppProvider>
                 </Provider>
-            </React.Fragment>
+            </React.StrictMode>
         );
     }
 }

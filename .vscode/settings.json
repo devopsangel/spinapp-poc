@@ -16,6 +16,7 @@
         "iana",
         "iana timezone",
         "io",
+        "loadingstore",
         "loadingstoredata",
         "timezone",
         "turtle",

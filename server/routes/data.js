@@ -30,11 +30,13 @@ module.exports = (Router) => {
                         if (!doc.exists) {
                             console.log(`> [ERR] No such document <${shop}>`);
                         } else {
-                            const docData = JSON.stringify(doc.data());
-                            console.log(
-                                `> [INF] Document data for store <${shop}>: (${docData})`,
-                            );
+                            // const docData = JSON.stringify(doc.data());
                             const { billingEnabled, bulkOperations, plan } = doc.data();
+                            const planData = JSON.stringify(plan);
+                            console.log(
+                                `> [INF] Document data for store <${shop}>: (BillingEnabled: ${billingEnabled}; Plan: ${planData})`,
+                                // `> [INF] Document data for store <${shop}>: (${docData})`,
+                            );
                             ctx.body = {
                                 shop: {
                                     billingEnabled,
