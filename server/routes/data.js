@@ -38,11 +38,9 @@ module.exports = (Router) => {
                                 // `> [INF] Document data for store <${shop}>: (${docData})`,
                             );
                             ctx.body = {
-                                shop: {
-                                    billingEnabled,
-                                    loadCompleted: bulkOperations.completed,
-                                    partnerDevelopment: plan.partnerDevelopment,
-                                },
+                                billingEnabled,
+                                loadCompleted: bulkOperations.completed,
+                                partnerDevelopment: plan.partnerDevelopment,
                             };
                         }
                     })

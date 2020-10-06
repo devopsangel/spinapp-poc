@@ -1,29 +1,80 @@
 import React, { useEffect } from 'react';
-import { atom, useRecoilState } from 'recoil';
-import { Layout, Page } from '@shopify/polaris';
-import { shopState } from '../shared/global-state';
+import { useRecoilState } from 'recoil';
+import { Layout, Page, Loading, Frame } from '@shopify/polaris';
+import { shopState, initializingState, errorState } from '../store';
 
-import LoadingStoreData from '../components/loadingstoredata';
+//components
+import BlockedStore from '../components/BlockedStore';
+import LoadingStoreData from '../components/LoadingStoreData';
+// import AgedProductsLoading from '../components/AgedProductsLoading';
+
+const centerStyle = {
+    height: '100vh',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
+};
 
 const Home = () => {
     const [shop, setShop] = useRecoilState(shopState);
+    const [initializing, setInitializing] = useRecoilState(initializingState);
+    const [error, setError] = useRecoilState(errorState);
 
     useEffect(() => {
-        const getShop = async () => {
-            const resp = await fetch(`${APP_HOST}/data/shop`);
-            const body = await resp.json();
-            setShop(body);
+        const fetchAll = async () => {
+            try {
+                setInitializing(true);
+
+                await fetch(`${APP_HOST}/data/shop`)
+                    .then((resp) => resp.json())
+                    .then((data) => setShop(data));
+            } catch (e) {
+                if (e.response) {
+                    setError(
+                        e.response.data ? e.response.data : e.response.status + ' Error',
+                    );
+                } else {
+                    setError(e.message);
+                }
+            } finally {
+                setInitializing(false);
+            }
         };
 
-        getShop();
-    }, [setShop]);
+        fetchAll();
+    }, []);
+
+    const hasAllData = shop;
 
     return (
-        <Page>
-            <Layout>
-                <LoadingStoreData />
-            </Layout>
-        </Page>
+        <React.Fragment>
+            <Page>
+                {initializing && (
+                    <Layout>
+                        <Frame>
+                            <Loading />
+                        </Frame>
+                    </Layout>
+                )}
+                {!initializing && error && (
+                    <Layout>
+                        <div style={centerStyle}>{error} :(...</div>
+                    </Layout>
+                )}
+                {!initializing && !error && hasAllData && (
+                    <Layout>
+                        {shop.partnerDevelopment ? (
+                            <BlockedStore />
+                        ) : !shop.loadCompleted ? (
+                            <LoadingStoreData />
+                        ) : (
+                            ''
+                        )}
+                    </Layout>
+                )}
+            </Page>
+        </React.Fragment>
     );
 };
 

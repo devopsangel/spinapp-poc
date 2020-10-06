@@ -45,7 +45,7 @@ const BlockedStore = () => (
                                 height: '300px',
                                 marginBottom: '-5px',
                             }}
-                            src='/assets/images/fakeStore.svg'
+                            src='/fakeStore.svg'
                             alt='Fake Store'
                         />
                     </div>
@@ -54,7 +54,10 @@ const BlockedStore = () => (
             <Layout.Section>
                 <FooterHelp>
                     Learn more about{' '}
-                    <Link url='https://wwww.zoocommerce.co/turtle'>inventory aging</Link>.
+                    <Link url='https://www.zoocommerce.co/turtle' external>
+                        Inventory Aging
+                    </Link>
+                    .
                 </FooterHelp>
             </Layout.Section>
         </Layout>
