@@ -6,7 +6,6 @@ import { shopState, initializingState, errorState } from '../store';
 //components
 import BlockedStore from '../components/BlockedStore';
 import LoadingStoreData from '../components/LoadingStoreData';
-// import AgedProductsLoading from '../components/AgedProductsLoading';
 
 const centerStyle = {
     height: '100vh',
