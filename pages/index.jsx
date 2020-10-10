@@ -6,6 +6,7 @@ import { shopState, initializingState, errorState } from '../store';
 //components
 import BlockedStore from '../components/BlockedStore';
 import LoadingStoreData from '../components/LoadingStoreData';
+import AgedProducts from '../components/AgedProducts';
 
 const centerStyle = {
     height: '100vh',
@@ -68,7 +69,7 @@ const Home = () => {
                         ) : !shop.loadCompleted ? (
                             <LoadingStoreData />
                         ) : (
-                            ''
+                            < AgedProducts />
                         )}
                     </Layout>
                 )}

@@ -6,37 +6,43 @@ const getBulkProducts = async (accessToken, shop) => {
             bulkOperationRunQuery(
             query: """
                 {
-                products {
-                    edges {
-                    node {
-                        id
-                        vendor
-                        productType
-                        tags
-                        collections {
-                            edges {
-                                node {
-                                    title
-                                    sortOrder
+                    products {
+                        edges {
+                            node {
+                                id
+                                vendor
+                                productType
+                                tags
+                                collections {
+                                    edges {
+                                        node {
+                                            title
+                                            sortOrder
+                                        }
+                                    }
                                 }
-                            }
-                        }
-                        variants {
-                            edges {
-                                node {
-                                    id
-                                    displayName
-                                    inventoryQuantity
-                                    updatedAt
-                                    image {
-                                        transformedSrc
+                                variants {
+                                    edges {
+                                        node {
+                                            id
+                                            displayName
+                                            inventoryQuantity
+                                            updatedAt
+                                            price
+                                            inventoryItem {
+                                                    unitCost {
+                                                    amount
+                                                }
+                                            }
+                                            image {
+                                                transformedSrc
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                    }
-                }
                 }
                 """
             ) {

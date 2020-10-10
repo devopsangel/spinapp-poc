@@ -68,9 +68,11 @@ module.exports = async ({ accessToken, shop }) => {
                             bulkOperations: {
                                 completed: false,
                                 productLoadID: bulkOpsProductID,
-                                productLoad: '',
+                                productLoadCompleted: false,
+                                productLoadStatus: '',
                                 orderLoadID: '',
-                                orderLoad: '',
+                                orderLoadCompleted: false,
+                                orderLoadStatus: ''
                             },
                             webhooks: registeredHooks,
                         });
