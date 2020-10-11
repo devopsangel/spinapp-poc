@@ -1,4 +1,4 @@
-FROM node:14.7.0-buster
+FROM node:14.13.1-buster
 
 LABEL maintainer="zookeeper@zoocommerce.tech"
 
