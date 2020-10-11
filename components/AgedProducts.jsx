@@ -42,7 +42,6 @@ const AgedProducts = () => {
     const [vendorDisabled, setVendorDisabled] = useRecoilState(vendorDisabledState);
     const [productTypeDisabled, setProductTypeDisabled] = useRecoilState(productTypeDisabledState);
     const [collectionDisabled, setCollectionDisabled] = useRecoilState(collectionDisabledState);
-
     const [selectedFrom, setSelectedFrom] = useRecoilState(selectedFromState);
     const [selectedTo, setSelectedTo] = useRecoilState(selectedToState);
     const [selectedVendor, setSelectedVendor] = useRecoilState(selectedVendorState);

@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { Select } from '@shopify/polaris';
 
 const Filter = (props) => {
