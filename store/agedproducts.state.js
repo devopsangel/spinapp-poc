@@ -1,5 +1,25 @@
 import { atom } from 'recoil';
 
+export const fetchingProductState = atom({
+    key: 'fetchingProductState',
+    default: false,
+});
+
+export const errorFetchingProductState = atom({
+    key: 'errorFetchingProductState',
+    default: '',
+});
+
+export const filtersState = atom({
+    key: 'filtersState',
+    default: {},
+});
+
+export const productsState = atom({
+    key: 'productsState',
+    default: {},
+});
+
 export const agedProductsStateState = atom({
     key: 'agedProductsStateState',
     default: {},

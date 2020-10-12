@@ -90,12 +90,10 @@ module.exports = (Router) => {
                                 vendors,
                             } = doc.data();
                             ctx.body = {
-                                filters: {
-                                    collections,
-                                    productTypes,
-                                    tags,
-                                    vendors,
-                                },
+                                collections,
+                                productTypes,
+                                tags,
+                                vendors,
                             };
                         }
                     })
@@ -342,7 +340,7 @@ module.exports = (Router) => {
                                 `> [INF] Product documents list data for store <${shop}>: found(${productList.length})`,
                             );
                             ctx.body = {
-                                products: productList,
+                                productList,
                             };
                         })
                         .catch((err) => {
@@ -367,7 +365,7 @@ module.exports = (Router) => {
                                 `> [INF] Product documents list data for store <${shop}>: found(${productList.length})`,
                             );
                             ctx.body = {
-                                products: productList,
+                                productList,
                             };
                         })
                         .catch((err) => {
@@ -392,7 +390,7 @@ module.exports = (Router) => {
                                 `> [INF] Product documents list data for store <${shop}>: found(${productList.length})`,
                             );
                             ctx.body = {
-                                products: productList,
+                                productList,
                             };
                         })
                         .catch((err) => {
@@ -417,7 +415,7 @@ module.exports = (Router) => {
                                 `> [INF] Product documents list data for store <${shop}>: found(${productList.length})`,
                             );
                             ctx.body = {
-                                products: productList,
+                                productList,
                             };
                         })
                         .catch((err) => {

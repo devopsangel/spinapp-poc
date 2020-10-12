@@ -49,7 +49,6 @@ const Home = () => {
 
     return (
         <React.Fragment>
-            <Page>
                 {initializing && (
                     <Layout>
                         <Frame>
@@ -73,7 +72,6 @@ const Home = () => {
                         )}
                     </Layout>
                 )}
-            </Page>
         </React.Fragment>
     );
 };

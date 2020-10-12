@@ -14,12 +14,17 @@ import {
     Banner,
     SkeletonBodyText,
     SkeletonDisplayText,
+    Page,
 } from '@shopify/polaris';
 import moment from 'moment';
 import abbreviate from 'number-abbreviate';
 import Filter from './Filter';
 
 import {
+    fetchingProductState,
+    errorFetchingProductState,
+    filtersState,
+    productsState,
     ageDayDisabledState,
     tagDisabledState,
     vendorDisabledState,
@@ -35,8 +40,13 @@ import {
     queryValueState,
 } from '../store';
 
-
 const AgedProducts = () => {
+    // Global
+    const [isFetchingProducts, setFetchingProducts] = useRecoilState(fetchingProductState);
+    const [isErrorFetchingProducts, setErrorFetchingProducts] = useRecoilState(errorFetchingProductState);
+
+    const [filters, setFilters] = useRecoilState(filtersState);
+    const [products, setProducts] = useRecoilState(productsState);
     const [ageDayDisabled, setAgeDayDisabled] = useRecoilState(ageDayDisabledState);
     const [tagDisabled, setTagDisabled] = useRecoilState(tagDisabledState);
     const [vendorDisabled, setVendorDisabled] = useRecoilState(vendorDisabledState);
@@ -52,14 +62,35 @@ const AgedProducts = () => {
     const [queryValue, setQueryValue] = useRecoilState(queryValueState);
 
     useEffect(() => {
-        if (!filters.vendors) getFilters(dispatch);
-        // eslint-disable-next-line
+        const fetchAll = async () => {
+            try {
+                setFetchingProducts(true);
+
+                await fetch(`${APP_HOST}/data/filters`)
+                    .then((resp) => resp.json())
+                    .then((data) => setFilters(data));
+
+                await fetch(`${APP_HOST}/data/products?name=none&value=none`)
+                    .then((resp) => resp.json())
+                    .then((data) => setProducts(data));
+            } catch (e) {
+                if (e.response) {
+                    setErrorFetchingProducts(
+                        e.response.data
+                            ? e.response.data
+                            : e.response.status + ' Error',
+                    );
+                } else {
+                    setErrorFetchingProducts(e.message);
+                }
+            } finally {
+                setFetchingProducts(false);
+            }
+        };
+
+        fetchAll();
     }, []);
 
-    useEffect(() => {
-        if (!products || products.length === 0)
-            getProducts(dispatch, 'name=none&value=none');
-    }, [products, dispatch]);
 
     const handleDisabledFilters = (filter) => {
         setAgeDayDisabled(filter !== 'ageDay' ? true : false);
@@ -171,6 +202,7 @@ const AgedProducts = () => {
                 updatedAt: v.updatedAt,
             }));
         }
+
         return items;
     }, [products, isFetchingProducts]);
 
@@ -322,7 +354,7 @@ const AgedProducts = () => {
         const style = { flex: 2, margin: '0 12px' };
         return (
             <React.Fragment>
-                <Frame>
+<Frame>
                     <Loading />
                     <div>
                         <div style={{ margin: '20px' }}>
@@ -373,7 +405,7 @@ const AgedProducts = () => {
         <React.Fragment>
             <Layout>
                 <Layout.Section>
-                    <Banner
+                    {/* <Banner
                         title='Learn more about Discount Scheduler App - Meerkat'
                         action={{
                             content: 'Discount Scheduler',
@@ -388,7 +420,7 @@ const AgedProducts = () => {
                             automatically schedule sale and announce to you Social
                             channels!
                         </p>
-                    </Banner>
+                    </Banner> */}
                 </Layout.Section>
                 <Layout.Section>
                     <Card>
@@ -424,17 +456,13 @@ const AgedProducts = () => {
                                     alignItems: 'center',
                                     padding: '6px',
                                 };
-
                                 const agedDays = abbreviate(age, 1);
                                 const productCounts = abbreviate(inventoryQuantity, 1);
                                 const formattedDate =
                                     moment().format('YYYY') ===
                                     moment(updatedAt).format('YYYY')
                                         ? moment(updatedAt).format('MMMM DD, h:mma')
-                                        : moment(updatedAt).format(
-                                              'MMMM DD, YYYY, h:mma',
-                                          );
-
+                                        : moment(updatedAt).format('MMMM DD, YYYY, h:mma',);
                                 const media = (
                                     <Avatar
                                         customer
