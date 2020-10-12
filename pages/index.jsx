@@ -49,6 +49,7 @@ const Home = () => {
 
     return (
         <React.Fragment>
+            <Page fullWidth={true}>
                 {initializing && (
                     <Layout>
                         <Frame>
@@ -72,6 +73,7 @@ const Home = () => {
                         )}
                     </Layout>
                 )}
+            </Page>
         </React.Fragment>
     );
 };

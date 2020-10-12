@@ -25,6 +25,7 @@ import {
     errorFetchingProductState,
     filtersState,
     productsState,
+    viewParamsState,
     ageDayDisabledState,
     tagDisabledState,
     vendorDisabledState,
@@ -47,6 +48,7 @@ const AgedProducts = () => {
 
     const [filters, setFilters] = useRecoilState(filtersState);
     const [products, setProducts] = useRecoilState(productsState);
+    const [viewParams, setViewParams] = useRecoilState(viewParamsState);
     const [ageDayDisabled, setAgeDayDisabled] = useRecoilState(ageDayDisabledState);
     const [tagDisabled, setTagDisabled] = useRecoilState(tagDisabledState);
     const [vendorDisabled, setVendorDisabled] = useRecoilState(vendorDisabledState);
@@ -70,9 +72,10 @@ const AgedProducts = () => {
                     .then((resp) => resp.json())
                     .then((data) => setFilters(data));
 
-                await fetch(`${APP_HOST}/data/products?name=none&value=none`)
+                await fetch(`${APP_HOST}/data/products?${viewParams}`)
                     .then((resp) => resp.json())
-                    .then((data) => setProducts(data));
+                    .then((data) => setProducts(data.products));
+
             } catch (e) {
                 if (e.response) {
                     setErrorFetchingProducts(
@@ -89,8 +92,7 @@ const AgedProducts = () => {
         };
 
         fetchAll();
-    }, []);
-
+    }, [viewParams]);
 
     const handleDisabledFilters = (filter) => {
         setAgeDayDisabled(filter !== 'ageDay' ? true : false);
@@ -110,31 +112,31 @@ const AgedProducts = () => {
     const handleSelectedAgeDayChange = useCallback((value) => {
         setSelectedAgeDay(value);
         handleDisabledFilters('ageDay');
-        getProducts(dispatch, `name=age&from=${value[0]}&to=${value[1]}`);
+        setViewParams(`name=age&from=${value[0]}&to=${value[1]}`);
         // eslint-disable-next-line
     }, []);
     const handleTaggedWithChange = useCallback((value) => {
         setTaggedWith(value);
         handleDisabledFilters('tag');
-        getProducts(dispatch, `name=tags&value=${value}`);
+        setViewParams(`name=tags&value=${value}`);
         // eslint-disable-next-line
     }, []);
     const handleSelectedVendorChange = useCallback((value) => {
         setSelectedVendor(value);
         handleDisabledFilters('vendor');
-        getProducts(dispatch, `name=vendor&value=${value}`);
+        setViewParams(`name=vendor&value=${value}`);
         // eslint-disable-next-line
     }, []);
     const handleProductTypeChange = useCallback((value) => {
         setSelectedProductType(value);
         handleDisabledFilters('productType');
-        getProducts(dispatch, `name=productType&value=${value}`);
+        setViewParams(`name=productType&value=${value}`);
         // eslint-disable-next-line
     }, []);
     const handleCollectionChange = useCallback((value) => {
         setSelectedCollection(value);
         handleDisabledFilters('collection');
-        getProducts(dispatch, `name=collections&value=${value}`);
+        setViewParams(`name=collections&value=${value}`);
         // eslint-disable-next-line
     }, []);
     const handleFiltersQueryChange = useCallback((value) => setQueryValue(value), []);
@@ -142,31 +144,31 @@ const AgedProducts = () => {
     const handleSelectedAgeDayRemove = useCallback(() => {
         setSelectedAgeDay('');
         handleDisabledFiltersClearAll();
-        getProducts(dispatch, 'name=none&value=none');
+        setViewParams('name=none&value=none');
         // eslint-disable-next-line
     }, []);
     const handleTaggedWithRemove = useCallback(() => {
         setTaggedWith('');
         handleDisabledFiltersClearAll();
-        getProducts(dispatch, 'name=none&value=none');
+        setViewParams('name=none&value=none');
         // eslint-disable-next-line
     }, []);
     const handleSelectedVendorRemove = useCallback(() => {
         setSelectedVendor('');
         handleDisabledFiltersClearAll();
-        getProducts(dispatch, 'name=none&value=none');
+        setViewParams('name=none&value=none');
         // eslint-disable-next-line
     }, []);
     const handleProductTypeRemove = useCallback(() => {
         setSelectedProductType('');
         handleDisabledFiltersClearAll();
-        getProducts(dispatch, 'name=none&value=none');
+        setViewParams('name=none&value=none');
         // eslint-disable-next-line
     }, []);
     const handleCollectionRemove = useCallback(() => {
         setSelectedCollection('');
         handleDisabledFiltersClearAll();
-        getProducts(dispatch, 'name=none&value=none');
+        setViewParams('name=none&value=none');
         // eslint-disable-next-line
     }, []);
     const handleQueryValueRemove = useCallback(() => setQueryValue(), []);
@@ -202,7 +204,6 @@ const AgedProducts = () => {
                 updatedAt: v.updatedAt,
             }));
         }
-
         return items;
     }, [products, isFetchingProducts]);
 
@@ -354,7 +355,7 @@ const AgedProducts = () => {
         const style = { flex: 2, margin: '0 12px' };
         return (
             <React.Fragment>
-<Frame>
+                <Frame>
                     <Loading />
                     <div>
                         <div style={{ margin: '20px' }}>

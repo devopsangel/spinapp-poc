@@ -340,7 +340,7 @@ module.exports = (Router) => {
                                 `> [INF] Product documents list data for store <${shop}>: found(${productList.length})`,
                             );
                             ctx.body = {
-                                productList,
+                                products: productList,
                             };
                         })
                         .catch((err) => {
@@ -365,7 +365,7 @@ module.exports = (Router) => {
                                 `> [INF] Product documents list data for store <${shop}>: found(${productList.length})`,
                             );
                             ctx.body = {
-                                productList,
+                                products: productList,
                             };
                         })
                         .catch((err) => {
@@ -390,7 +390,7 @@ module.exports = (Router) => {
                                 `> [INF] Product documents list data for store <${shop}>: found(${productList.length})`,
                             );
                             ctx.body = {
-                                productList,
+                                products: productList,
                             };
                         })
                         .catch((err) => {
@@ -415,7 +415,7 @@ module.exports = (Router) => {
                                 `> [INF] Product documents list data for store <${shop}>: found(${productList.length})`,
                             );
                             ctx.body = {
-                                productList,
+                                products: productList,
                             };
                         })
                         .catch((err) => {
