@@ -10,13 +10,13 @@ export const errorFetchingProductState = atom({
     default: '',
 });
 
-export const filtersState = atom({
-    key: 'filtersState',
+export const productsState = atom({
+    key: 'productsState',
     default: {},
 });
 
-export const productsState = atom({
-    key: 'productsState',
+export const filtersState = atom({
+    key: 'filtersState',
     default: {},
 });
 

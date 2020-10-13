@@ -28,7 +28,7 @@ class ZooApp extends App {
         };
 
         return (
-            <React.StrictMode>
+            <React.Fragment>
                 <Head>
                     <title>Inventory Aging</title>
                     <meta charSet='utf-8' />
@@ -42,7 +42,7 @@ class ZooApp extends App {
                         </ApolloProvider>
                     </AppProvider>
                 </Provider>
-            </React.StrictMode>
+            </React.Fragment>
         );
     }
 }

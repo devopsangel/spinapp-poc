@@ -1,26 +1,23 @@
 import React, { useCallback, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
     Avatar,
     Card,
     Filters,
     ResourceList,
     TextField,
-    Frame,
-    Loading,
     FormLayout,
     Button,
     Layout,
-    Banner,
-    SkeletonBodyText,
-    SkeletonDisplayText,
-    Page,
+    Banner
 } from '@shopify/polaris';
 import moment from 'moment';
 import abbreviate from 'number-abbreviate';
 import Filter from './Filter';
+import AgedProductsLoading from './AgedProductsLoading';
 
 import {
+    meerkatInfoState,
     fetchingProductState,
     errorFetchingProductState,
     filtersState,
@@ -62,6 +59,8 @@ const AgedProducts = () => {
     const [selectedProductType, setSelectedProductType] = useRecoilState(selectedProductTypeState);
     const [selectedCollection, setSelectedCollection] = useRecoilState(selectedCollectionState);
     const [queryValue, setQueryValue] = useRecoilState(queryValueState);
+
+    const meerkatInfo = useRecoilValue(meerkatInfoState);
 
     useEffect(() => {
         const fetchAll = async () => {
@@ -352,61 +351,18 @@ const AgedProducts = () => {
     }
 
     if (isFetchingProducts) {
-        const style = { flex: 2, margin: '0 12px' };
         return (
-            <React.Fragment>
-                <Frame>
-                    <Loading />
-                    <div>
-                        <div style={{ margin: '20px' }}>
-                            <SkeletonDisplayText />
-                            <div style={{ height: '12px' }} />
-                            <SkeletonBodyText lines={2} />
-                        </div>
-                        <hr style={{ margin: '6px 0 0 0', borderColor: '#DFE3E8' }} />
-                        <ResourceList
-                            items={['', '', '', '', '']}
-                            renderItem={() => {
-                                return (
-                                    <ResourceList.Item>
-                                        <div style={{ display: 'flex' }}>
-                                            <div style={style}>
-                                                <SkeletonBodyText lines={1} />
-                                            </div>
-                                            <div style={{ ...style, flex: 3 }}>
-                                                <SkeletonBodyText lines={2} />
-                                            </div>
-                                            <div style={style}>
-                                                <SkeletonBodyText lines={1} />
-                                            </div>
-                                            <div style={style}>
-                                                <SkeletonBodyText lines={1} />
-                                            </div>
-                                            <div
-                                                style={{
-                                                    flex: 1,
-                                                    margin: '0',
-                                                    paddingLeft: '12px',
-                                                }}
-                                            >
-                                                <SkeletonDisplayText />
-                                            </div>
-                                        </div>
-                                    </ResourceList.Item>
-                                );
-                            }}
-                        />
-                    </div>
-                </Frame>
-            </React.Fragment>
+            <AgedProductsLoading />
         );
     }
 
     return (
         <React.Fragment>
+            <div style={{width: '100%', margin: '20px'}}>
             <Layout>
+                {!meerkatInfo.billingEnabled || !meerkatInfo.installed ? (
                 <Layout.Section>
-                    {/* <Banner
+                    <Banner
                         title='Learn more about Discount Scheduler App - Meerkat'
                         action={{
                             content: 'Discount Scheduler',
@@ -421,115 +377,117 @@ const AgedProducts = () => {
                             automatically schedule sale and announce to you Social
                             channels!
                         </p>
-                    </Banner> */}
+                    </Banner>
                 </Layout.Section>
+                ) : '' }
                 <Layout.Section>
-                    <Card>
-                        <ResourceList
-                            resourceName={{
-                                singular: 'product',
-                                plural: 'products',
-                            }}
-                            filterControl={
-                                <Filters
-                                    queryValue={queryValue}
-                                    filters={filtersOpts}
-                                    appliedFilters={appliedFilters}
-                                    onQueryChange={handleFiltersQueryChange}
-                                    onQueryClear={handleQueryValueRemove}
-                                    onClearAll={handleFiltersClearAll}
-                                />
-                            }
-                            showHeader={true}
-                            items={handleResourceListItems()}
-                            renderItem={(item) => {
-                                const {
-                                    id,
-                                    url,
-                                    name,
-                                    age,
-                                    inventoryQuantity,
-                                    updatedAt,
-                                } = item;
-                                const rowStyle = {
-                                    flex: 2,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    padding: '6px',
-                                };
-                                const agedDays = abbreviate(age, 1);
-                                const productCounts = abbreviate(inventoryQuantity, 1);
-                                const formattedDate =
-                                    moment().format('YYYY') ===
-                                    moment(updatedAt).format('YYYY')
-                                        ? moment(updatedAt).format('MMMM DD, h:mma')
-                                        : moment(updatedAt).format('MMMM DD, YYYY, h:mma',);
-                                const media = (
-                                    <Avatar
-                                        customer
-                                        source={url}
-                                        size='large'
-                                        name={name}
+                        <Card>
+                            <ResourceList
+                                resourceName={{
+                                    singular: 'product',
+                                    plural: 'products',
+                                }}
+                                filterControl={
+                                    <Filters
+                                        queryValue={queryValue}
+                                        filters={filtersOpts}
+                                        appliedFilters={appliedFilters}
+                                        onQueryChange={handleFiltersQueryChange}
+                                        onQueryClear={handleQueryValueRemove}
+                                        onClearAll={handleFiltersClearAll}
                                     />
-                                );
-                                return (
-                                    <ResourceList.Item
-                                        id={id}
-                                        url={url}
-                                        media={media}
-                                        accessibilityLabel={`View details for ${name}`}
-                                    >
-                                        <div
-                                            style={{
-                                                display: 'flex',
-                                                flexWrap: 'wrap',
-                                            }}
+                                }
+                                showHeader={true}
+                                items={handleResourceListItems()}
+                                renderItem={(item) => {
+                                    const {
+                                        id,
+                                        url,
+                                        name,
+                                        age,
+                                        inventoryQuantity,
+                                        updatedAt,
+                                    } = item;
+                                    const rowStyle = {
+                                        flex: 2,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        padding: '6px',
+                                    };
+                                    const agedDays = abbreviate(age, 1);
+                                    const productCounts = abbreviate(inventoryQuantity, 1);
+                                    const formattedDate =
+                                        moment().format('YYYY') ===
+                                        moment(updatedAt).format('YYYY')
+                                            ? moment(updatedAt).format('MMMM DD, h:mma')
+                                            : moment(updatedAt).format('MMMM DD, YYYY, h:mma',);
+                                    const media = (
+                                        <Avatar
+                                            customer
+                                            source={url}
+                                            size='large'
+                                            name={name}
+                                        />
+                                    );
+                                    return (
+                                        <ResourceList.Item
+                                            id={id}
+                                            url={url}
+                                            media={media}
+                                            accessibilityLabel={`View details for ${name}`}
                                         >
                                             <div
                                                 style={{
-                                                    ...rowStyle,
-                                                    justifyContent: 'left',
+                                                    display: 'flex',
+                                                    flexWrap: 'wrap',
                                                 }}
                                             >
-                                                {name}
+                                                <div
+                                                    style={{
+                                                        ...rowStyle,
+                                                        justifyContent: 'left',
+                                                    }}
+                                                >
+                                                    {name}
+                                                </div>
+                                                <div
+                                                    style={{
+                                                        ...rowStyle,
+                                                        justifyContent: 'center',
+                                                    }}
+                                                >
+                                                    {agedDays}{' '}
+                                                    {agedDays === 0 || agedDays === 1
+                                                        ? 'day aged'
+                                                        : 'days aged'}
+                                                </div>
+                                                <div
+                                                    style={{
+                                                        ...rowStyle,
+                                                        justifyContent: 'center',
+                                                    }}
+                                                >
+                                                    {productCounts}
+                                                    {' in stock'}
+                                                </div>
+                                                <div
+                                                    style={{
+                                                        ...rowStyle,
+                                                        justifyContent: 'left',
+                                                    }}
+                                                >
+                                                    {'Purchased on '}
+                                                    {formattedDate}
+                                                </div>
                                             </div>
-                                            <div
-                                                style={{
-                                                    ...rowStyle,
-                                                    justifyContent: 'center',
-                                                }}
-                                            >
-                                                {agedDays}{' '}
-                                                {agedDays === 0 || agedDays === 1
-                                                    ? 'day aged'
-                                                    : 'days aged'}
-                                            </div>
-                                            <div
-                                                style={{
-                                                    ...rowStyle,
-                                                    justifyContent: 'center',
-                                                }}
-                                            >
-                                                {productCounts}
-                                                {' in stock'}
-                                            </div>
-                                            <div
-                                                style={{
-                                                    ...rowStyle,
-                                                    justifyContent: 'left',
-                                                }}
-                                            >
-                                                {'Purchased on '}
-                                                {formattedDate}
-                                            </div>
-                                        </div>
-                                    </ResourceList.Item>
-                                );
-                            }}
-                        />
-                    </Card>
+                                        </ResourceList.Item>
+                                    );
+                                }}
+                            />
+                        </Card>
                 </Layout.Section>
-            </Layout>
+                </Layout>
+            </div>
         </React.Fragment>
     );
 

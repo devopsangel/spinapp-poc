@@ -2,9 +2,8 @@ import React from 'react';
 import { Page, Card, TextStyle, Layout, FooterHelp, Link } from '@shopify/polaris';
 
 const BlockedStore = () => (
-    <Page separator>
+    <React.Fragment>
         <div style={{ height: '100px' }} />
-
         <Layout>
             <Layout.Section>
                 <Card>
@@ -61,7 +60,7 @@ const BlockedStore = () => (
                 </FooterHelp>
             </Layout.Section>
         </Layout>
-    </Page>
+    </React.Fragment>
 );
 
 export default BlockedStore;

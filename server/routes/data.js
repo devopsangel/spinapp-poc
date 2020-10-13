@@ -431,5 +431,54 @@ module.exports = (Router) => {
         }
     });
 
+    // check whether meerkat installed
+    router.get('/meerkat/info', async (ctx) => {
+        try {
+            const {
+                session: { shop },
+            } = ctx;
+
+            const { admin, error } = firestore();
+            ctx.body = '';
+            if (!admin) {
+                console.log(
+                    '> [ERR] Error encountered while registering or interacting with firestore client: ',
+                    error,
+                );
+                ctx.statusCode = 503;
+            } else {
+                const db = admin.firestore();
+                const docRef = db.collection('meerkatShops').doc(shop.split('.')[0]);
+                await docRef
+                    .get()
+                    .then((doc) => {
+                        if (!doc.exists) {
+                            console.log(`> [ERR] No such document <${shop}>`);
+                            ctx.body = {
+                                billingEnabled: false,
+                                installed: false,
+                            };
+                        } else {
+                            const { billingEnabled, installed } = doc.data();
+                            console.log(
+                                `> [INF] Document data for store <${shop}> : Meerkat Info : BillingEnabled(${billingEnabled}) : Installed(${installed})`,
+                            );
+                            ctx.body = {
+                                billingEnabled,
+                                installed,
+                            };
+                        }
+                    })
+                    .catch((err) => {
+                        console.log('[ERR] Error getting document', err);
+                    });
+                ctx.statusCode = 200;
+            }
+        } catch (err) {
+            ctx.statusCode = 500;
+            ctx.body = JSON.stringify({ error: err });
+        }
+    });
+
     return router;
 };

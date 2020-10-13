@@ -1,7 +1,12 @@
 import React, { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { Layout, Page, Loading, Frame } from '@shopify/polaris';
-import { shopState, initializingState, errorState } from '../store';
+import {
+    shopState,
+    initializingState,
+    errorState,
+    meerkatInfoState
+} from '../store';
 
 //components
 import BlockedStore from '../components/BlockedStore';
@@ -20,6 +25,7 @@ const Home = () => {
     const [shop, setShop] = useRecoilState(shopState);
     const [initializing, setInitializing] = useRecoilState(initializingState);
     const [error, setError] = useRecoilState(errorState);
+    const [meerkatInfo, setMeerkatInfo] = useRecoilState(meerkatInfoState);
 
     useEffect(() => {
         const fetchAll = async () => {
@@ -29,6 +35,10 @@ const Home = () => {
                 await fetch(`${APP_HOST}/data/shop`)
                     .then((resp) => resp.json())
                     .then((data) => setShop(data));
+
+                await fetch(`${APP_HOST}/data/meerkat/info`)
+                    .then((resp) => resp.json())
+                    .then((data) => setMeerkatInfo(data));
             } catch (e) {
                 if (e.response) {
                     setError(
@@ -45,7 +55,7 @@ const Home = () => {
         fetchAll();
     }, []);
 
-    const hasAllData = shop;
+    const hasAllData = shop && meerkatInfo;
 
     return (
         <React.Fragment>
