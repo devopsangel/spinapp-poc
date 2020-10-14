@@ -1,5 +1,8 @@
 import React, { useCallback, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import gql from 'graphql-tag';
+import { useQuery } from '@apollo/react-hooks';
+
 import {
     Avatar,
     Card,
@@ -15,6 +18,7 @@ import moment from 'moment';
 import abbreviate from 'number-abbreviate';
 import Filter from './Filter';
 import AgedProductsLoading from './AgedProductsLoading';
+import ResourceListHeader from './ResourceListHeader';
 
 import {
     meerkatInfoState,
@@ -37,6 +41,27 @@ import {
     selectedCollectionState,
     queryValueState,
 } from '../store';
+
+const GET_FEATURED_IMAGE = gql`
+    query product($id: ID!) {
+        product(id: $id) {
+            featuredImage {
+            transformedSrc
+            }
+        }
+    }
+`;
+
+const queryFeaturedImage = (id) => {
+    const { loading, error, data } = useQuery(GET_FEATURED_IMAGE, {
+        variables: { id }
+    });
+
+    if (loading) return 'http://via.placeholder.com/640x360';
+    if (error) return 'http://via.placeholder.com/640x360';
+
+    return data.product.featuredImage.transformedSrc;
+}
 
 const AgedProducts = () => {
     // Global
@@ -191,6 +216,7 @@ const AgedProducts = () => {
     const handleResourceListItems = useCallback(() => {
         let items = [];
         if (!isFetchingProducts && products.length > 0) {
+            // const featuredImage = await queryFeaturedImage(id)
             items = products.map((v) => ({
                 id: v.id,
                 url:
@@ -200,6 +226,10 @@ const AgedProducts = () => {
                 name: v.displayName,
                 age: v.age,
                 inventoryQuantity: v.inventoryQuantity,
+                cost: v.cost,
+                totalValueCost: v.totalValueCost,
+                price: v.price,
+                totalValuePrice: v.totalValuePrice,
                 updatedAt: v.updatedAt,
             }));
         }
@@ -406,6 +436,10 @@ const AgedProducts = () => {
                                         name,
                                         age,
                                         inventoryQuantity,
+                                        cost,
+                                        totalValueCost,
+                                        price,
+                                        totalValuePrice,
                                         updatedAt,
                                     } = item;
                                     const rowStyle = {
@@ -414,8 +448,15 @@ const AgedProducts = () => {
                                         alignItems: 'center',
                                         padding: '6px',
                                     };
+                                    const rowStyleQuantity = {
+                                        flex: 1,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        padding: '6px',
+                                    };
                                     const agedDays = abbreviate(age, 1);
                                     const productCounts = abbreviate(inventoryQuantity, 1);
+                                    const formattedCost = cost.length > 0 ? cost : 0;
                                     const formattedDate =
                                         moment().format('YYYY') ===
                                         moment(updatedAt).format('YYYY')
@@ -452,7 +493,7 @@ const AgedProducts = () => {
                                                 </div>
                                                 <div
                                                     style={{
-                                                        ...rowStyle,
+                                                        ...rowStyleQuantity,
                                                         justifyContent: 'center',
                                                     }}
                                                 >
@@ -463,12 +504,44 @@ const AgedProducts = () => {
                                                 </div>
                                                 <div
                                                     style={{
-                                                        ...rowStyle,
+                                                        ...rowStyleQuantity,
                                                         justifyContent: 'center',
                                                     }}
                                                 >
                                                     {productCounts}
                                                     {' in stock'}
+                                                </div>
+                                                <div
+                                                    style={{
+                                                        ...rowStyleQuantity,
+                                                        justifyContent: 'center',
+                                                    }}
+                                                >
+                                                    {formattedCost}
+                                                </div>
+                                                <div
+                                                    style={{
+                                                        ...rowStyle,
+                                                        justifyContent: 'center',
+                                                    }}
+                                                >
+                                                    {totalValueCost}
+                                                </div>
+                                                <div
+                                                    style={{
+                                                        ...rowStyleQuantity,
+                                                        justifyContent: 'center',
+                                                    }}
+                                                >
+                                                    {price}
+                                                </div>
+                                                <div
+                                                    style={{
+                                                        ...rowStyle,
+                                                        justifyContent: 'center',
+                                                    }}
+                                                >
+                                                    {totalValuePrice}
                                                 </div>
                                                 <div
                                                     style={{
