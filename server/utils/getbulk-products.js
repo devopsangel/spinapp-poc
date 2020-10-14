@@ -13,6 +13,9 @@ const getBulkProducts = async (accessToken, shop) => {
                                 vendor
                                 productType
                                 tags
+                                featuredImage {
+                                    transformedSrc
+                                }
                                 collections {
                                     edges {
                                         node {
