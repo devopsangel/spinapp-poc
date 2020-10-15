@@ -10,7 +10,7 @@ module.exports = () => {
             topic: topicName,
             accessToken,
             shop,
-            apiVersion: ApiVersion.October19,
+            apiVersion: ApiVersion.July20,
         });
 
         if (registration.success) {
