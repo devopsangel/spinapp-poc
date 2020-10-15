@@ -215,23 +215,26 @@ const AgedProducts = () => {
 
     const handleResourceListItems = useCallback(() => {
         let items = [];
+        // const featuredImage = await queryFeaturedImage(v.parentID)
+
         if (!isFetchingProducts && products.length > 0) {
-            // const featuredImage = await queryFeaturedImage(id)
-            items = products.map((v) => ({
-                id: v.id,
-                url:
-                    v.transformedSrc !== ''
-                        ? v.transformedSrc
-                        : 'http://via.placeholder.com/640x360',
-                name: v.displayName,
-                age: v.age,
-                inventoryQuantity: v.inventoryQuantity,
-                cost: v.cost,
-                totalValueCost: v.totalValueCost,
-                price: v.price,
-                totalValuePrice: v.totalValuePrice,
-                updatedAt: v.updatedAt,
-            }));
+            items = products.map((v) => {
+                return {
+                    id: v.id,
+                    url:
+                        v.transformedSrc !== ''
+                            ? v.transformedSrc
+                            : 'http://via.placeholder.com/640x360',
+                    name: v.displayName,
+                    age: v.age,
+                    inventoryQuantity: v.inventoryQuantity,
+                    cost: v.cost,
+                    totalValueCost: v.totalValueCost,
+                    price: v.price,
+                    totalValuePrice: v.totalValuePrice,
+                    updatedAt: v.updatedAt,
+                }
+            });
         }
         return items;
     }, [products, isFetchingProducts]);
