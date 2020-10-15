@@ -98,8 +98,17 @@ const AgedProducts = () => {
 
                 await fetch(`${APP_HOST}/data/products?${viewParams}`)
                     .then((resp) => resp.json())
-                    .then((data) => setProducts(data.products));
-
+                    .then((data) => {
+                        const productList = data.products.map(async (product) => {
+                            const featuredImage = await queryFeaturedImage(product.parentID);
+                            return {
+                                featuredImage,
+                                ...product,
+                            }
+                        });
+                        setProducts(productList);
+                        // setProducts(data.products)
+                    });
             } catch (e) {
                 if (e.response) {
                     setErrorFetchingProducts(
@@ -215,8 +224,6 @@ const AgedProducts = () => {
 
     const handleResourceListItems = useCallback(() => {
         let items = [];
-        // const featuredImage = await queryFeaturedImage(v.parentID)
-
         if (!isFetchingProducts && products.length > 0) {
             items = products.map((v) => {
                 return {
