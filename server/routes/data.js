@@ -304,7 +304,26 @@ module.exports = (Router) => {
                 request,
             } = ctx;
 
+            // Next
+            // myQuery = myQuery.start(after: previousDoc) Last doc from the batch
+            // myQuery = myQuery.end(before: firstDoc) First doc from the batch
             const filter = qs.parse(request.query);
+            const pageSize = parseInt(filter.pageSize);
+
+            let nextPage;
+            if ('nextPage' in filter) {
+                const buff = Buffer.from(filter.nextPage, 'base64');
+                nextPage = JSON.parse(buff.toString('ascii'));
+                console.log('Next Page -> ', nextPage);
+            }
+
+            let previousPage;
+            if ('previousPage' in filter) {
+                const buff = Buffer.from(filter.previousPage, 'base64');
+                previousPage = JSON.parse(buff.toString('ascii'));
+                console.log('Previous Page -> ', previousPage);
+            }
+
             const { admin, error } = firestore();
             ctx.body = '';
             if (!admin) {
@@ -325,7 +344,7 @@ module.exports = (Router) => {
                         .where(filter.name, '>=', filter.from)
                         .where(filter.name, '<', filter.to)
                         .orderBy('age', 'desc')
-                        .limit(50)
+                        .limit(pageSize)
                         .get()
                         .then((snapshot) => {
                             if (snapshot.empty) {
@@ -350,7 +369,7 @@ module.exports = (Router) => {
                     await variantsRef
                         .where('age', '>=', 0)
                         .orderBy('age', 'desc')
-                        .limit(50)
+                        .limit(pageSize)
                         .get()
                         .then((snapshot) => {
                             if (snapshot.empty) {
@@ -375,7 +394,7 @@ module.exports = (Router) => {
                     await variantsRef
                         .where(filter.name, 'array-contains', filter.value)
                         .orderBy('updatedAt', 'desc')
-                        .limit(50)
+                        .limit(pageSize)
                         .get()
                         .then((snapshot) => {
                             if (snapshot.empty) {
@@ -400,7 +419,7 @@ module.exports = (Router) => {
                     await variantsRef
                         .where(filter.name, '==', filter.value)
                         .orderBy('updatedAt', 'desc')
-                        .limit(50)
+                        .limit(pageSize)
                         .get()
                         .then((snapshot) => {
                             if (snapshot.empty) {

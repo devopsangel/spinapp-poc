@@ -2,7 +2,6 @@ import React, { useCallback, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
-
 import {
     Avatar,
     Card,
@@ -12,13 +11,15 @@ import {
     FormLayout,
     Button,
     Layout,
-    Banner
+    Banner,
+    Pagination,
+    FooterHelp,
+    Link,
 } from '@shopify/polaris';
 import moment from 'moment';
 import abbreviate from 'number-abbreviate';
 import Filter from './Filter';
 import AgedProductsLoading from './AgedProductsLoading';
-import ResourceListHeader from './ResourceListHeader';
 
 import {
     meerkatInfoState,
@@ -51,7 +52,6 @@ const GET_FEATURED_IMAGE = gql`
         }
     }
 `;
-
 const queryFeaturedImage = (id) => {
     const { loading, error, data } = useQuery(GET_FEATURED_IMAGE, {
         variables: { id }
@@ -67,7 +67,6 @@ const AgedProducts = () => {
     // Global
     const [isFetchingProducts, setFetchingProducts] = useRecoilState(fetchingProductState);
     const [isErrorFetchingProducts, setErrorFetchingProducts] = useRecoilState(errorFetchingProductState);
-
     const [filters, setFilters] = useRecoilState(filtersState);
     const [products, setProducts] = useRecoilState(productsState);
     const [viewParams, setViewParams] = useRecoilState(viewParamsState);
@@ -85,7 +84,11 @@ const AgedProducts = () => {
     const [selectedCollection, setSelectedCollection] = useRecoilState(selectedCollectionState);
     const [queryValue, setQueryValue] = useRecoilState(queryValueState);
 
+    // get values
     const meerkatInfo = useRecoilValue(meerkatInfoState);
+
+    // page size
+    const pageSize = 7;
 
     useEffect(() => {
         const fetchAll = async () => {
@@ -96,19 +99,9 @@ const AgedProducts = () => {
                     .then((resp) => resp.json())
                     .then((data) => setFilters(data));
 
-                await fetch(`${APP_HOST}/data/products?${viewParams}`)
+                await fetch(`${APP_HOST}/data/products?pageSize=${pageSize}&${viewParams}`)
                     .then((resp) => resp.json())
-                    .then((data) => {
-                        const productList = data.products.map(async (product) => {
-                            const featuredImage = await queryFeaturedImage(product.parentID);
-                            return {
-                                featuredImage,
-                                ...product,
-                            }
-                        });
-                        setProducts(productList);
-                        // setProducts(data.products)
-                    });
+                    .then((data) => setProducts(data.products));
             } catch (e) {
                 if (e.response) {
                     setErrorFetchingProducts(
@@ -474,7 +467,7 @@ const AgedProducts = () => {
                                             : moment(updatedAt).format('MMMM DD, YYYY, h:mma',);
                                     const media = (
                                         <Avatar
-                                            customer
+                                            customer={false}
                                             source={url}
                                             size='large'
                                             name={name}
@@ -567,9 +560,47 @@ const AgedProducts = () => {
                                     );
                                 }}
                             />
+                            <Card>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            justifyContent: 'center',
+                                            padding: '15px',
+                                            textAlign: 'center',
+                                        }}
+                                    >
+                                        <Pagination
+                                            hasPrevious
+                                            onPrevious={() => {
+                                                const docEncoded = btoa(JSON.stringify(products[0]));
+                                                setViewParams(viewParams + `&previousPage=${docEncoded}`);
+                                            }}
+                                            hasNext
+                                            onNext={() => {
+                                                const docEncoded = btoa(JSON.stringify(products[products.length - 1]));
+                                                setViewParams(viewParams + `&nextPage=${docEncoded}`);
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            </Card>
                         </Card>
                 </Layout.Section>
                 </Layout>
+                <FooterHelp>
+                    Learn more about{' '}
+                    <Link url="https://zoocommerce.co">
+                        Aged Products
+                    </Link>
+                </FooterHelp>
             </div>
         </React.Fragment>
     );
