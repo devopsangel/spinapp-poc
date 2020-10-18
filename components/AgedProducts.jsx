@@ -88,7 +88,7 @@ const AgedProducts = () => {
     const meerkatInfo = useRecoilValue(meerkatInfoState);
 
     // page size
-    const pageSize = 7;
+    const pageSize = 10;
 
     useEffect(() => {
         const fetchAll = async () => {
