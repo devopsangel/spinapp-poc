@@ -7,6 +7,7 @@ import {
     Card,
     Filters,
     ResourceList,
+    ResourceItem,
     TextField,
     FormLayout,
     Button,
@@ -167,7 +168,34 @@ const AgedProducts = () => {
         setViewParams(`name=collections&value=${value}`);
         // eslint-disable-next-line
     }, []);
-    const handleFiltersQueryChange = useCallback((value) => setQueryValue(value), []);
+    const handleFiltersQueryChange = useCallback((value) => {
+        const params = qs.parse(viewParams)
+        if (params.hasOwnProperty('nextPage')) {
+            delete params.nextPage;
+        }
+        if (params.hasOwnProperty('previousPage')) {
+            delete params.previousPage;
+        }
+        if (params.hasOwnProperty('startSearch')) {
+                    delete params.startSearch;
+        }
+        if (params.hasOwnProperty('endSearch')) {
+                    delete params.endSearch;
+        }
+
+        const slicedValue = value.slice(0, value.length - 1);
+        const lastValueChar = value.slice(value.length - 1, value.length);
+        const endSearch = slicedValue + String.fromCharCode(lastValueChar.charCodeAt(0) + 1);
+        const searchStartEncoded = btoa(JSON.stringify(value));
+        const searchEndEncoded = btoa(JSON.stringify(endSearch));
+
+        setQueryValue(value)
+        setTimeout(() => {
+            console.log('TimedOut-3secs');
+            setViewParams(qs.stringify(params) + `&startSearch=${searchStartEncoded}&endSearch=${searchEndEncoded}`);
+        }, 1500);
+
+    }, []);
 
     const handleSelectedAgeDayRemove = useCallback(() => {
         setSelectedAgeDay('');
@@ -199,7 +227,10 @@ const AgedProducts = () => {
         setViewParams('name=none&value=none');
         // eslint-disable-next-line
     }, []);
-    const handleQueryValueRemove = useCallback(() => setQueryValue(), []);
+    const handleQueryValueRemove = useCallback(() => {
+        setQueryValue('');
+        setViewParams('name=none&value=none');
+    }, []);
 
     const handleFiltersClearAll = useCallback(() => {
         handleSelectedAgeDayRemove();
@@ -475,8 +506,10 @@ const AgedProducts = () => {
                                             name={name}
                                         />
                                     );
+
+
                                     return (
-                                        <ResourceList.Item
+                                        <ResourceItem
                                             id={id}
                                             url={url}
                                             media={media}
@@ -558,7 +591,7 @@ const AgedProducts = () => {
                                                     {formattedDate}
                                                 </div>
                                             </div>
-                                        </ResourceList.Item>
+                                        </ResourceItem>
                                     );
                                 }}
                             />
