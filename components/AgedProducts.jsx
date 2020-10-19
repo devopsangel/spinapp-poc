@@ -590,7 +590,10 @@ const AgedProducts = () => {
                                                 if (params.hasOwnProperty('previousPage')) {
                                                     delete params.previousPage;
                                                 }
-                                                setViewParams(qs.stringify(params) + `&previousPage=${docEncoded}`);
+
+                                                if (products.length > 0) {
+                                                    setViewParams(qs.stringify(params) + `&previousPage=${docEncoded}`);
+                                                }
                                             }}
                                             hasNext
                                             onNext={() => {
@@ -602,7 +605,12 @@ const AgedProducts = () => {
                                                 if (params.hasOwnProperty('previousPage')) {
                                                     delete params.previousPage;
                                                 }
-                                                setViewParams(qs.stringify(params) + `&nextPage=${docEncoded}`);
+
+                                                if (products.length > 0) {
+                                                    setViewParams(qs.stringify(params) + `&nextPage=${docEncoded}`);
+                                                } else {
+                                                    setViewParams(qs.stringify(params))
+                                                }
                                             }}
                                         />
                                     </div>
