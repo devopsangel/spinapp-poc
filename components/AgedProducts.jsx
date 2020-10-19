@@ -17,7 +17,9 @@ import {
     Link,
 } from '@shopify/polaris';
 import moment from 'moment';
+import qs from 'qs';
 import abbreviate from 'number-abbreviate';
+
 import Filter from './Filter';
 import AgedProductsLoading from './AgedProductsLoading';
 
@@ -581,12 +583,26 @@ const AgedProducts = () => {
                                             hasPrevious
                                             onPrevious={() => {
                                                 const docEncoded = btoa(JSON.stringify(products[0]));
-                                                setViewParams(viewParams + `&previousPage=${docEncoded}`);
+                                                const params = qs.parse(viewParams)
+                                                if (params.hasOwnProperty('nextPage')) {
+                                                    delete params.nextPage;
+                                                }
+                                                if (params.hasOwnProperty('previousPage')) {
+                                                    delete params.previousPage;
+                                                }
+                                                setViewParams(qs.stringify(params) + `&previousPage=${docEncoded}`);
                                             }}
                                             hasNext
                                             onNext={() => {
                                                 const docEncoded = btoa(JSON.stringify(products[products.length - 1]));
-                                                setViewParams(viewParams + `&nextPage=${docEncoded}`);
+                                                const params = qs.parse(viewParams)
+                                                if (params.hasOwnProperty('nextPage')) {
+                                                    delete params.nextPage;
+                                                }
+                                                if (params.hasOwnProperty('previousPage')) {
+                                                    delete params.previousPage;
+                                                }
+                                                setViewParams(qs.stringify(params) + `&nextPage=${docEncoded}`);
                                             }}
                                         />
                                     </div>

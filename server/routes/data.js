@@ -296,7 +296,9 @@ module.exports = (Router) => {
         }
     });
 
+    //
     // pull the products
+    //
     router.get('/products', async (ctx) => {
         try {
             const {
@@ -304,27 +306,30 @@ module.exports = (Router) => {
                 request,
             } = ctx;
 
-            // Next
-            // myQuery = myQuery.start(after: previousDoc) Last doc from the batch
-            // myQuery = myQuery.end(before: firstDoc) First doc from the batch
+            const { admin, error } = firestore();
+            const db = admin.firestore();
+            const variantsRef = db
+                .collection('turtleProducts')
+                .doc(shop.split('.')[0])
+                .collection('variants');
+
             const filter = qs.parse(request.query);
             const pageSize = parseInt(filter.pageSize);
 
-            let nextPage;
+            let docSnapshot;
             if ('nextPage' in filter) {
                 const buff = Buffer.from(filter.nextPage, 'base64');
-                nextPage = JSON.parse(buff.toString('ascii'));
-                console.log('Next Page -> ', nextPage);
+                const nextPage = JSON.parse(buff.toString('ascii'));
+                // console.log('Next Page -> ', nextPage);
+                docSnapshot = await variantsRef.doc(nextPage.id.split('/')[4]).get();
             }
-
-            let previousPage;
             if ('previousPage' in filter) {
                 const buff = Buffer.from(filter.previousPage, 'base64');
-                previousPage = JSON.parse(buff.toString('ascii'));
-                console.log('Previous Page -> ', previousPage);
+                const previousPage = JSON.parse(buff.toString('ascii'));
+                // console.log('Previous Page -> ', previousPage);
+                docSnapshot = await variantsRef.doc(previousPage.id.split('/')[4]).get();
             }
 
-            const { admin, error } = firestore();
             ctx.body = '';
             if (!admin) {
                 console.log(
@@ -333,24 +338,31 @@ module.exports = (Router) => {
                 );
                 ctx.statusCode = 503;
             } else {
-                const db = admin.firestore();
-                const variantsRef = db
-                    .collection('turtleProducts')
-                    .doc(shop.split('.')[0])
-                    .collection('variants');
-
                 if (filter.name === 'age') {
-                    await variantsRef
+                    const queryBaseAged = variantsRef
                         .where(filter.name, '>=', filter.from)
                         .where(filter.name, '<', filter.to)
-                        .orderBy('age', 'desc')
-                        .limit(pageSize)
+                        .orderBy('age', 'desc');
+
+                    let queryAgedVariants;
+                    if ('nextPage' in filter) {
+                        queryAgedVariants = queryBaseAged
+                            .startAfter(docSnapshot)
+                            .limit(pageSize);
+                    } else if ('previousPage' in filter) {
+                        queryAgedVariants = queryBaseAged
+                            .endBefore(docSnapshot)
+                            .limit(pageSize);
+                    } else {
+                        queryAgedVariants = queryBaseAged.limit(pageSize);
+                    }
+
+                    await queryAgedVariants
                         .get()
                         .then((snapshot) => {
                             if (snapshot.empty) {
                                 console.log(`> [INF] No matching documents <${shop}>`);
                             }
-
                             let productList = [];
                             snapshot.forEach((doc) => {
                                 productList.push(doc.data());
@@ -366,16 +378,29 @@ module.exports = (Router) => {
                             console.log('[ERR] Error getting product documents', err);
                         });
                 } else if (filter.name === 'none') {
-                    await variantsRef
+                    const queryBaseNone = variantsRef
                         .where('age', '>=', 0)
-                        .orderBy('age', 'desc')
-                        .limit(pageSize)
+                        .orderBy('age', 'desc');
+
+                    let queryNoneVariants;
+                    if ('nextPage' in filter) {
+                        queryNoneVariants = queryBaseNone
+                            .startAfter(docSnapshot)
+                            .limit(pageSize);
+                    } else if ('previousPage' in filter) {
+                        queryNoneVariants = queryBaseNone
+                            .endBefore(docSnapshot)
+                            .limit(pageSize);
+                    } else {
+                        queryNoneVariants = queryBaseNone.limit(pageSize);
+                    }
+
+                    await queryNoneVariants
                         .get()
                         .then((snapshot) => {
                             if (snapshot.empty) {
                                 console.log(`> [INF] No matching documents <${shop}>`);
                             }
-
                             let productList = [];
                             snapshot.forEach((doc) => {
                                 productList.push(doc.data());
@@ -391,16 +416,29 @@ module.exports = (Router) => {
                             console.log('[ERR] Error getting product documents', err);
                         });
                 } else if (filter.name === 'collections' || filter.name === 'tags') {
-                    await variantsRef
+                    const queryBaseTagCol = variantsRef
                         .where(filter.name, 'array-contains', filter.value)
-                        .orderBy('updatedAt', 'desc')
-                        .limit(pageSize)
+                        .orderBy('updatedAt', 'desc');
+
+                    let queryColTagVariants;
+                    if ('nextPage' in filter) {
+                        queryColTagVariants = queryBaseTagCol
+                            .startAfter(docSnapshot)
+                            .limit(pageSize);
+                    } else if ('previousPage' in filter) {
+                        queryColTagVariants = queryBaseTagCol
+                            .endBefore(docSnapshot)
+                            .limit(pageSize);
+                    } else {
+                        queryColTagVariants = queryBaseTagCol.limit(pageSize);
+                    }
+
+                    await queryColTagVariants
                         .get()
                         .then((snapshot) => {
                             if (snapshot.empty) {
                                 console.log(`> [INF] No matching documents <${shop}>`);
                             }
-
                             let productList = [];
                             snapshot.forEach((doc) => {
                                 productList.push(doc.data());
@@ -425,7 +463,6 @@ module.exports = (Router) => {
                             if (snapshot.empty) {
                                 console.log(`> [INF] No matching documents <${shop}>`);
                             }
-
                             let productList = [];
                             snapshot.forEach((doc) => {
                                 productList.push(doc.data());
