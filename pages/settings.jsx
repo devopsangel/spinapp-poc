@@ -1,5 +1,5 @@
-import React, { useCallback } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import React, { useCallback, useEffect } from 'react';
+import { useRecoilState } from 'recoil';
 
 import {
     Page,
@@ -14,18 +14,51 @@ import {
     SkeletonBodyText,
     SkeletonDisplayText,
 } from '@shopify/polaris';
-// import SettingsLoading from '../components/SettingsLoading';
+import SettingsLoading from '../components/SettingsLoading';
 // import TagList from '../components/TagList';
 
 import {
     shopState,
-    meerkatInfoState,
+    initializingState,
+    errorState,
+    meerkatInfoState
 } from '../store';
 
 const Settings = () => {
-    // get values
-    const meerkatInfo = useRecoilValue(meerkatInfoState);
-    const turtleInfo = useRecoilValue(shopState);
+    const [shop, setShop] = useRecoilState(shopState);
+    const [initializing, setInitializing] = useRecoilState(initializingState);
+    const [error, setError] = useRecoilState(errorState);
+    const [meerkatInfo, setMeerkatInfo] = useRecoilState(meerkatInfoState);
+
+    useEffect(() => {
+        const fetchAll = async () => {
+            try {
+                setInitializing(true);
+
+                await fetch(`${APP_HOST}/data/shop`)
+                    .then((resp) => resp.json())
+                    .then((data) => setShop(data));
+
+                await fetch(`${APP_HOST}/data/meerkat/info`)
+                    .then((resp) => resp.json())
+                    .then((data) => setMeerkatInfo(data));
+            } catch (e) {
+                if (e.response) {
+                    setError(
+                        e.response.data ? e.response.data : e.response.status + ' Error',
+                    );
+                } else {
+                    setError(e.message);
+                }
+            } finally {
+                setInitializing(false);
+            }
+        };
+
+        fetchAll();
+    }, []);
+
+    const hasAllData = shop && meerkatInfo;
 
     // const handleTaggedWithChange = useCallback((value) => {
     //     setTaggedWith(value);
@@ -47,6 +80,12 @@ const Settings = () => {
         <React.Fragment>
             <Page fullWidth={false}>
                 <div style={{ height: '20px' }} />
+                {initializing && (
+                    <Layout>
+                        <SettingsLoading />
+                    </Layout>
+                )}
+                {!initializing && !error && hasAllData && (
                 <Layout>
                     {!meerkatInfo.billingEnabled || !meerkatInfo.installed ? (
                     <Layout.Section>
@@ -106,7 +145,7 @@ const Settings = () => {
                             <FormLayout>
                                 <FormLayout.Group>
                                     <Button
-                                        disabled={!turtleInfo.loadCompleted}
+                                        disabled={!shop.loadCompleted}
                                         onClick={() => handleReloadOnClick()}
                                     >
                                         Reload aged data
@@ -115,7 +154,8 @@ const Settings = () => {
                             </FormLayout>
                         </Card>
                     </Layout.AnnotatedSection>
-                </Layout>
+                    </Layout>
+                    )}
             </Page>
         </React.Fragment>
     );
