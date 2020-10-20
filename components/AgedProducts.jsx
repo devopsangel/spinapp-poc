@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import gql from 'graphql-tag';
-import { useQuery } from '@apollo/react-hooks';
+// import gql from 'graphql-tag';
+// import { useQuery } from '@apollo/react-hooks';
 import {
     Avatar,
     Card,

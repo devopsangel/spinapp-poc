@@ -3,6 +3,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 
 import {
     Page,
+    Banner,
     Layout,
     FormLayout,
     Card,
@@ -13,14 +14,17 @@ import {
     SkeletonBodyText,
     SkeletonDisplayText,
 } from '@shopify/polaris';
-import SettingsLoading from '../components/SettingsLoading';
+// import SettingsLoading from '../components/SettingsLoading';
 // import TagList from '../components/TagList';
 
 import {
     shopState,
+    meerkatInfoState,
 } from '../store';
 
 const Settings = () => {
+    // get values
+    const meerkatInfo = useRecoilValue(meerkatInfoState);
     const turtleInfo = useRecoilValue(shopState);
 
     // const handleTaggedWithChange = useCallback((value) => {
@@ -41,9 +45,29 @@ const Settings = () => {
 
     return (
         <React.Fragment>
-            <Page>
+            <Page fullWidth={false}>
                 <div style={{ height: '20px' }} />
                 <Layout>
+                    {!meerkatInfo.billingEnabled || !meerkatInfo.installed ? (
+                    <Layout.Section>
+                        <Banner
+                            title='Learn more about Discount Scheduler App - Meerkat'
+                            action={{
+                                content: 'Discount Scheduler',
+                                external: true,
+                                url: 'https://apps.shopify.com',
+                            }}
+                            status='info'
+                            // onDismiss={() => {}}
+                        >
+                            <p>
+                                Got inventory that needs to move out? Add Meerkat app to
+                                automatically schedule sale and announce to you Social
+                                channels!
+                            </p>
+                        </Banner>
+                    </Layout.Section>
+                    ) : '' }
                     {/* <Layout.AnnotatedSection
                         title='Ignore products'
                         description='List of tags that applied to products that needs to be ignored.'
