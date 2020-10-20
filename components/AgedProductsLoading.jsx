@@ -4,7 +4,7 @@ import {
     Frame,
     Loading,
     SkeletonBodyText,
-    SkeletonDisplayText,
+    // SkeletonDisplayText,
 } from '@shopify/polaris';
 
 const style = { flex: 2, margin: '0 12px' };
@@ -16,7 +16,7 @@ const AgedProductsLoading = () => {
                 <Loading />
                 <div>
                     <div style={{ margin: '20px' }}>
-                        <SkeletonDisplayText />
+                        {/* <SkeletonDisplayText /> */}
                         <div style={{ height: '12px' }} />
                         <SkeletonBodyText lines={2} />
                     </div>
@@ -39,7 +39,10 @@ const AgedProductsLoading = () => {
                                         <div style={style}>
                                             <SkeletonBodyText lines={1} />
                                         </div>
-                                        <div
+                                        <div style={style}>
+                                            <SkeletonBodyText lines={1} />
+                                        </div>
+                                        {/* <div
                                             style={{
                                                 flex: 1,
                                                 margin: '0',
@@ -47,7 +50,7 @@ const AgedProductsLoading = () => {
                                             }}
                                         >
                                             <SkeletonDisplayText />
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </ResourceList.Item>
                             );

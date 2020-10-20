@@ -16,6 +16,7 @@ import {
     Pagination,
     FooterHelp,
     Link,
+    TextStyle,
 } from '@shopify/polaris';
 import moment from 'moment';
 import qs from 'qs';
@@ -25,6 +26,7 @@ import Filter from './Filter';
 import AgedProductsLoading from './AgedProductsLoading';
 
 import {
+    shopState,
     meerkatInfoState,
     fetchingProductState,
     errorFetchingProductState,
@@ -46,25 +48,25 @@ import {
     queryValueState,
 } from '../store';
 
-const GET_FEATURED_IMAGE = gql`
-    query product($id: ID!) {
-        product(id: $id) {
-            featuredImage {
-            transformedSrc
-            }
-        }
-    }
-`;
-const queryFeaturedImage = (id) => {
-    const { loading, error, data } = useQuery(GET_FEATURED_IMAGE, {
-        variables: { id }
-    });
+// const GET_FEATURED_IMAGE = gql`
+//     query product($id: ID!) {
+//         product(id: $id) {
+//             featuredImage {
+//             transformedSrc
+//             }
+//         }
+//     }
+// `;
+// const queryFeaturedImage = (id) => {
+//     const { loading, error, data } = useQuery(GET_FEATURED_IMAGE, {
+//         variables: { id }
+//     });
 
-    if (loading) return 'http://via.placeholder.com/640x360';
-    if (error) return 'http://via.placeholder.com/640x360';
+//     if (loading) return 'http://via.placeholder.com/640x360';
+//     if (error) return 'http://via.placeholder.com/640x360';
 
-    return data.product.featuredImage.transformedSrc;
-}
+//     return data.product.featuredImage.transformedSrc;
+// }
 
 const AgedProducts = () => {
     // Global
@@ -89,9 +91,10 @@ const AgedProducts = () => {
 
     // get values
     const meerkatInfo = useRecoilValue(meerkatInfoState);
+    const turtleInfo = useRecoilValue(shopState);
 
     // page size
-    const pageSize = 10;
+    const pageSize = 30;
 
     useEffect(() => {
         const fetchAll = async () => {
@@ -104,7 +107,9 @@ const AgedProducts = () => {
 
                 await fetch(`${APP_HOST}/data/products?pageSize=${pageSize}&${viewParams}`)
                     .then((resp) => resp.json())
-                    .then((data) => setProducts(data.products));
+                    .then((data) => {
+                        setProducts(data.products);
+                    });
             } catch (e) {
                 if (e.response) {
                     setErrorFetchingProducts(
@@ -119,7 +124,6 @@ const AgedProducts = () => {
                 setFetchingProducts(false);
             }
         };
-
         fetchAll();
     }, [viewParams]);
 
@@ -250,7 +254,7 @@ const AgedProducts = () => {
 
     const handleResourceListItems = useCallback(() => {
         let items = [];
-        if (!isFetchingProducts && products.length > 0) {
+        if (!isFetchingProducts && products.length > 1) {
             items = products.map((v) => {
                 return {
                     id: v.id,
@@ -463,7 +467,7 @@ const AgedProducts = () => {
                                         onClearAll={handleFiltersClearAll}
                                     />
                                 }
-                                showHeader={true}
+                                showHeader={false}
                                 items={handleResourceListItems()}
                                 renderItem={(item) => {
                                     const {
@@ -490,23 +494,81 @@ const AgedProducts = () => {
                                         alignItems: 'center',
                                         padding: '6px',
                                     };
-                                    const agedDays = abbreviate(age, 1);
-                                    const productCounts = abbreviate(inventoryQuantity, 1);
-                                    const formattedCost = cost.length > 0 ? cost : 0;
-                                    const formattedDate =
-                                        moment().format('YYYY') ===
+                                    const displayName = (name === 'dummy') ? (
+                                        <h1>
+                                            <TextStyle variation="strong">Product Name</TextStyle>
+                                        </h1>
+                                    ) : name
+                                    const agedDays = (age === 'dummy') ? (
+                                        <h1>
+                                            <TextStyle variation="strong">Days Aged</TextStyle>
+                                        </h1>
+                                    ) : abbreviate(age, 1);
+                                    const productCounts = (inventoryQuantity === 'dummy') ? (
+                                        <h1>
+                                            <TextStyle variation="strong">Inventory</TextStyle>
+                                        </h1>
+                                    ) : abbreviate(inventoryQuantity, 1);
+                                    const formattedCost = (cost === 'dummy') ? (
+                                        <h1>
+                                            <TextStyle variation="strong">Cost({turtleInfo.currencyCode})</TextStyle>
+                                        </h1>
+                                    ) : (cost.length > 0 ? cost : 0);
+                                    const formattedTotalValueCost = (totalValueCost === 'dummy') ? (
+                                        <h1>
+                                            <TextStyle variation="strong">Total Value Cost({turtleInfo.currencyCode})</TextStyle>
+                                        </h1>
+                                    ) : totalValueCost;
+                                    const formattedPrice = (price === 'dummy') ? (
+                                        <h1>
+                                            <TextStyle variation="strong">Price({turtleInfo.currencyCode})</TextStyle>
+                                        </h1>
+                                    ) : price;
+                                    const formattedTotalValuePrice = (totalValuePrice === 'dummy') ? (
+                                        <h1>
+                                            <TextStyle variation="strong">Total Value Price({turtleInfo.currencyCode})</TextStyle>
+                                        </h1>
+                                    ) : totalValuePrice;
+                                    const formattedDate = (updatedAt === 'dummy') ? (
+                                        <h1>
+                                            <TextStyle variation="strong">Last Time Purchased</TextStyle>
+                                        </h1>
+                                    ) : (moment().format('YYYY') ===
                                         moment(updatedAt).format('YYYY')
                                             ? moment(updatedAt).format('MMMM DD, h:mma')
-                                            : moment(updatedAt).format('MMMM DD, YYYY, h:mma',);
-                                    const media = (
-                                        <Avatar
-                                            customer={false}
-                                            source={url}
-                                            size='large'
-                                            name={name}
-                                        />
+                                            : moment(updatedAt).format('MMMM DD, YYYY, h:mma',));
+                                    const media = (name === 'dummy') ? (
+                                        <div style={{
+                                            width: '70px',
+                                            height: '45px'
+                                        }}>
+                                        </div>
+                                    ) : (
+                                            <div style={{ display: 'flex' }}>
+                                                <div
+                                                    style={{
+                                                        flex: 1,
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        maxWidth: '70px',
+                                                        maxHeight: '60px',
+                                                        padding: '0rem'
+                                                    }}
+                                                >
+                                                    <img
+                                                        alt={name}
+                                                        src={url}
+                                                        width='100%'
+                                                    />
+                                                </div>
+                                            </div>
+                                        // <Avatar
+                                        //     customer={false}
+                                        //     source={url}
+                                        //     size='large'
+                                        //     name={name}
+                                        // />
                                     );
-
 
                                     return (
                                         <ResourceItem
@@ -527,7 +589,7 @@ const AgedProducts = () => {
                                                         justifyContent: 'left',
                                                     }}
                                                 >
-                                                    {name}
+                                                    {displayName}
                                                 </div>
                                                 <div
                                                     style={{
@@ -535,10 +597,7 @@ const AgedProducts = () => {
                                                         justifyContent: 'center',
                                                     }}
                                                 >
-                                                    {agedDays}{' '}
-                                                    {agedDays === 0 || agedDays === 1
-                                                        ? 'day aged'
-                                                        : 'days aged'}
+                                                    {agedDays}
                                                 </div>
                                                 <div
                                                     style={{
@@ -547,7 +606,6 @@ const AgedProducts = () => {
                                                     }}
                                                 >
                                                     {productCounts}
-                                                    {' in stock'}
                                                 </div>
                                                 <div
                                                     style={{
@@ -555,7 +613,9 @@ const AgedProducts = () => {
                                                         justifyContent: 'center',
                                                     }}
                                                 >
-                                                    {formattedCost}
+                                                    {(formattedCost === 0) ?
+                                                        (<TextStyle variation="negative">{formattedCost}</TextStyle>)
+                                                        : (formattedCost)}
                                                 </div>
                                                 <div
                                                     style={{
@@ -563,7 +623,9 @@ const AgedProducts = () => {
                                                         justifyContent: 'center',
                                                     }}
                                                 >
-                                                    {totalValueCost}
+                                                    {(formattedTotalValueCost === 0) ?
+                                                        (<TextStyle variation="negative">{formattedTotalValueCost}</TextStyle>)
+                                                        : (formattedTotalValueCost)}
                                                 </div>
                                                 <div
                                                     style={{
@@ -571,7 +633,9 @@ const AgedProducts = () => {
                                                         justifyContent: 'center',
                                                     }}
                                                 >
-                                                    {price}
+                                                    {(formattedPrice === 0) ?
+                                                        (<TextStyle variation="negative">{formattedPrice}</TextStyle>)
+                                                        : (formattedPrice)}
                                                 </div>
                                                 <div
                                                     style={{
@@ -579,7 +643,9 @@ const AgedProducts = () => {
                                                         justifyContent: 'center',
                                                     }}
                                                 >
-                                                    {totalValuePrice}
+                                                    {(formattedTotalValuePrice === 0) ?
+                                                        (<TextStyle variation="negative">{formattedTotalValuePrice}</TextStyle>)
+                                                        : (formattedTotalValuePrice)}
                                                 </div>
                                                 <div
                                                     style={{
@@ -587,7 +653,6 @@ const AgedProducts = () => {
                                                         justifyContent: 'left',
                                                     }}
                                                 >
-                                                    {'Purchased on '}
                                                     {formattedDate}
                                                 </div>
                                             </div>
@@ -615,7 +680,7 @@ const AgedProducts = () => {
                                         <Pagination
                                             hasPrevious
                                             onPrevious={() => {
-                                                const docEncoded = btoa(JSON.stringify(products[0]));
+                                                const docEncoded = btoa(JSON.stringify(products[1]));
                                                 const params = qs.parse(viewParams)
                                                 if (params.hasOwnProperty('nextPage')) {
                                                     delete params.nextPage;
@@ -624,7 +689,7 @@ const AgedProducts = () => {
                                                     delete params.previousPage;
                                                 }
 
-                                                if (products.length > 0) {
+                                                if (products.length > 1) {
                                                     setViewParams(qs.stringify(params) + `&previousPage=${docEncoded}`);
                                                 }
                                             }}
@@ -639,7 +704,7 @@ const AgedProducts = () => {
                                                     delete params.previousPage;
                                                 }
 
-                                                if (products.length > 0) {
+                                                if (products.length > 1) {
                                                     setViewParams(qs.stringify(params) + `&nextPage=${docEncoded}`);
                                                 } else {
                                                     setViewParams(qs.stringify(params))

@@ -31,7 +31,12 @@ module.exports = (Router) => {
                             console.log(`> [ERR] No such document <${shop}>`);
                         } else {
                             // const docData = JSON.stringify(doc.data());
-                            const { billingEnabled, bulkOperations, plan } = doc.data();
+                            const {
+                                billingEnabled,
+                                bulkOperations,
+                                plan,
+                                currencyCode,
+                            } = doc.data();
                             const planData = JSON.stringify(plan);
                             console.log(
                                 `> [INF] Document data for store <${shop}>: (BillingEnabled: ${billingEnabled}; Plan: ${planData})`,
@@ -39,6 +44,7 @@ module.exports = (Router) => {
                             );
                             ctx.body = {
                                 billingEnabled,
+                                currencyCode,
                                 loadCompleted: bulkOperations.completed,
                                 partnerDevelopment: plan.partnerDevelopment,
                             };
@@ -330,6 +336,25 @@ module.exports = (Router) => {
                 docSnapshot = await variantsRef.doc(previousPage.id.split('/')[4]).get();
             }
 
+            //dummy data
+            const itemHeader = {
+                displayName: 'dummy',
+                updatedAt: 'dummy',
+                price: 'dummy',
+                inventoryQuantity: 'dummy',
+                totalValuePrice: 'dummy',
+                age: 'dummy',
+                cost: 'dummy',
+                profit: 'dummy',
+                parentID: 'dummy',
+                vendor: 'dummy',
+                id: 'dummy',
+                tags: ['dummy'],
+                productType: 'dummy',
+                transformedSrc: 'dummy',
+                totalValueCost: 'dummy',
+            };
+
             ctx.body = '';
             if (!admin) {
                 console.log(
@@ -371,7 +396,7 @@ module.exports = (Router) => {
                                 `> [INF] Product documents list data for store <${shop}>: found(${productList.length})`,
                             );
                             ctx.body = {
-                                products: productList,
+                                products: [itemHeader, ...productList],
                             };
                         })
                         .catch((err) => {
@@ -409,7 +434,7 @@ module.exports = (Router) => {
                                 `> [INF] Product documents list data for store <${shop}>: found(${productList.length})`,
                             );
                             ctx.body = {
-                                products: productList,
+                                products: [itemHeader, ...productList],
                             };
                         })
                         .catch((err) => {
@@ -447,7 +472,7 @@ module.exports = (Router) => {
                                 `> [INF] Product documents list data for store <${shop}>: found(${productList.length})`,
                             );
                             ctx.body = {
-                                products: productList,
+                                products: [itemHeader, ...productList],
                             };
                         })
                         .catch((err) => {
@@ -471,7 +496,7 @@ module.exports = (Router) => {
                                 `> [INF] Product documents list data for store <${shop}>: found(${productList.length})`,
                             );
                             ctx.body = {
-                                products: productList,
+                                products: [itemHeader, ...productList],
                             };
                         })
                         .catch((err) => {
