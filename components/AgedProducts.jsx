@@ -48,6 +48,8 @@ import {
     queryValueState,
 } from '../store';
 
+import { ZooContext } from '../context/global.state';
+
 // const GET_FEATURED_IMAGE = gql`
 //     query product($id: ID!) {
 //         product(id: $id) {
@@ -69,6 +71,8 @@ import {
 // }
 
 const AgedProducts = () => {
+    const { meerkatInfo } = useContext(ZooContext);
+
     // Global
     const [isFetchingProducts, setFetchingProducts] = useRecoilState(fetchingProductState);
     const [isErrorFetchingProducts, setErrorFetchingProducts] = useRecoilState(errorFetchingProductState);
@@ -90,7 +94,7 @@ const AgedProducts = () => {
     const [queryValue, setQueryValue] = useRecoilState(queryValueState);
 
     // get values
-    const meerkatInfo = useRecoilValue(meerkatInfoState);
+    // const meerkatInfo = useRecoilValue(meerkatInfoState);
     const turtleInfo = useRecoilValue(shopState);
 
     // page size

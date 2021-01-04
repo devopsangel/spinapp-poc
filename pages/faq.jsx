@@ -9,22 +9,31 @@ const FAQ = () => {
                     <Layout>
                         <Layout.Section>
                             <TextContainer>
-                                <Heading>How does Aged Products work?</Heading>
+                                <Heading>How does Spin App work?</Heading>
                                 <p>
-                                    Data get analized accross all store orders and it will
-                                    track any changes on the products.
+                                    Nullam efficitur eget nibh in suscipit. Sed faucibus sodales dapibus. Vivamus fermentum ante at
+                                    nulla maximus lacinia in quis est. Nunc faucibus mattis molestie. Proin rutrum facilisis mauris
+                                    nec varius. Aliquam tincidunt leo eros, nec dapibus felis congue eget. Nulla consectetur, purus
+                                    imperdiet ultrices egestas, leo urna mattis leo, rhoncus ultrices leo ligula eu elit. Suspendisse
+                                    nec tempor quam. Duis fringilla nisl non massa laoreet congue. Pellentesque suscipit leo eu auctor
+                                    accumsan. Vestibulum egestas diam nisl, ut mollis elit fermentum sed. In hac habitasse platea
+                                    dictumst. Praesent vestibulum metus vestibulum, placerat nulla vel, placerat sem.
                                 </p>
                             </TextContainer>
                         </Layout.Section>
                         <Layout.Section>
                             <TextContainer>
                                 <Heading>
-                                    What time zone is used for time based Inventory age
-                                    updates?
+                                    How Spin App using your data?
                                 </Heading>
                                 <p>
-                                    It is based on the local time zone of the place where
-                                    your store exist. .
+                                    Nullam efficitur eget nibh in suscipit. Sed faucibus sodales dapibus. Vivamus fermentum ante at
+                                    nulla maximus lacinia in quis est. Nunc faucibus mattis molestie. Proin rutrum facilisis mauris
+                                    nec varius. Aliquam tincidunt leo eros, nec dapibus felis congue eget. Nulla consectetur, purus
+                                    imperdiet ultrices egestas, leo urna mattis leo, rhoncus ultrices leo ligula eu elit. Suspendisse
+                                    nec tempor quam. Duis fringilla nisl non massa laoreet congue. Pellentesque suscipit leo eu auctor
+                                    accumsan. Vestibulum egestas diam nisl, ut mollis elit fermentum sed. In hac habitasse platea
+                                    dictumst. Praesent vestibulum metus vestibulum, placerat nulla vel, placerat sem.
                                 </p>
                             </TextContainer>
                         </Layout.Section>
@@ -34,10 +43,10 @@ const FAQ = () => {
                                 <p>
                                     Please find our Privacy Policy at{' '}
                                     <Link
-                                        url='https://www.zoocommerce.co/privacy'
+                                        url='https://www.google.com'
                                         external={true}
                                     >
-                                        zoocommerce.co/privacy
+                                        spinapp.co/privacy
                                     </Link>
                                     .
                                 </p>

@@ -9,3 +9,8 @@ export const errorState = atom({
     key: 'errorState',
     default: '',
 });
+
+export const commentsState = atom({
+    key: 'commentsState',
+    default: [],
+});

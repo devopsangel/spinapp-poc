@@ -2,16 +2,15 @@ import React, { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { Layout, Page, Loading, Frame } from '@shopify/polaris';
 import {
-    shopState,
-    initializingState,
-    errorState,
-    meerkatInfoState
+    initializing,
+    error,
+    commentsState
 } from '../store';
 
 //components
-import BlockedStore from '../components/BlockedStore';
-import LoadingStoreData from '../components/LoadingStoreData';
-import AgedProducts from '../components/AgedProducts';
+// import BlockedStore from '../components/BlockedStore';
+// import LoadingStoreData from '../components/LoadingStoreData';
+// import AgedProducts from '../components/AgedProducts';
 
 const centerStyle = {
     height: '100vh',
@@ -22,23 +21,18 @@ const centerStyle = {
 };
 
 const Home = () => {
-    const [shop, setShop] = useRecoilState(shopState);
+    const [comments, setComments] = useRecoilState(commentsState);
     const [initializing, setInitializing] = useRecoilState(initializingState);
     const [error, setError] = useRecoilState(errorState);
-    const [meerkatInfo, setMeerkatInfo] = useRecoilState(meerkatInfoState);
 
     useEffect(() => {
         const fetchAll = async () => {
             try {
                 setInitializing(true);
 
-                await fetch(`${APP_HOST}/data/shop`)
+                await fetch(`${APP_HOST}/data/comments`)
                     .then((resp) => resp.json())
-                    .then((data) => setShop(data));
-
-                await fetch(`${APP_HOST}/data/meerkat/info`)
-                    .then((resp) => resp.json())
-                    .then((data) => setMeerkatInfo(data));
+                    .then((data) => setComments(data));
             } catch (e) {
                 if (e.response) {
                     setError(
@@ -55,7 +49,10 @@ const Home = () => {
         fetchAll();
     }, []);
 
-    const hasAllData = shop && meerkatInfo;
+    const hasAllData = comments;
+
+    // checking data
+    console.log('Comments: ', comments);
 
     return (
         <React.Fragment>
