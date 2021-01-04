@@ -29,7 +29,7 @@ app.prepare().then(() => {
     server.use(dataRouter.routes());
     server.use(dataRouter.allowedMethods());
 
-    router.get('(.*)', verifyRequest(), async (ctx) => {
+    router.get('(.*)', async (ctx) => {
         await handle(ctx.req, ctx.res);
         ctx.respond = false;
         ctx.res.statusCode = 200;
