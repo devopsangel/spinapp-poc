@@ -25,7 +25,6 @@ app.prepare().then(() => {
     server.use(session({ sameSite: 'none', secure: true }, server));
 
     // data routes
-    server.use(bodyParser());
     server.use(dataRouter.routes());
     server.use(dataRouter.allowedMethods());
 

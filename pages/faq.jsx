@@ -1,5 +1,12 @@
 import React from 'react';
-import { Card, Layout, TextContainer, Heading, Link, Page } from '@shopify/polaris';
+import {
+    Card,
+    Layout,
+    TextContainer,
+    Heading,
+    Link,
+    Page
+} from '@shopify/polaris';
 
 const FAQ = () => {
     return (

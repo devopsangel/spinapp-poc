@@ -35,8 +35,6 @@ module.exports = (Router) => {
                         console.log(
                             `> [INF] Comment documents list data: found(${comments.length})`,
                         );
-                        console.log('Products: ', comments);
-
                         ctx.body = {
                             comments: [...comments],
                         };

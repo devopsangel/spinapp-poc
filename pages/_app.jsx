@@ -9,17 +9,23 @@ import { RecoilRoot } from 'recoil';
 
 class MyApp extends App {
     render () {
+        const { Component, pageProps } = this.props;
+
+        const config = {
+            forceRedirect: false
+        };
+
         return (
             <React.Fragment>
                 <Head>
                     <title>Spin App</title>
                     <meta charSet='utf-8' />
                 </Head>
-                    <AppProvider i18n={translations}>
-                        <RecoilRoot>
-                            <Component {...pageProps} />
-                        </RecoilRoot>
-                    </AppProvider>
+                <AppProvider i18n={translations}>
+                    <RecoilRoot>
+                        <Component {...pageProps} />
+                    </RecoilRoot>
+                </AppProvider>
             </React.Fragment>
         );
     }

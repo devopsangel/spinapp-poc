@@ -71,13 +71,7 @@ const Home = () => {
                 )}
                 {!initializing && !error && hasAllData && (
                     <Layout>
-                        {shop.partnerDevelopment ? (
-                            <BlockedStore />
-                        ) : !shop.loadCompleted ? (
-                            <LoadingStoreData />
-                        ) : (
-                            < AgedProducts />
-                        )}
+
                     </Layout>
                 )}
             </Page>
