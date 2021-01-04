@@ -1,0 +1,8 @@
+node_modules/
+my-app*
+packages/react-scripts/template
+packages/react-scripts/fixturesnode_modules/
+build
+my-app*
+packages/react-scripts/template
+packages/react-scripts/fixtures
