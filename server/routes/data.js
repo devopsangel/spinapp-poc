@@ -1,3 +1,4 @@
+const { doTypesOverlap } = require('graphql');
 const firestore = require('../platform/firestore.js');
 const { docs } = require('../utils/firestore-utils')();
 
@@ -8,8 +9,6 @@ module.exports = (Router) => {
     router.get('/comments', async (ctx) => {
         try {
             const { admin, error } = firestore();
-            const db = admin.firestore();
-            const commentsRef = db.collection('comments').doc();
 
             ctx.body = '';
             if (!admin) {
@@ -19,24 +18,30 @@ module.exports = (Router) => {
                 );
                 ctx.statusCode = 503;
             } else {
-                const queryComments = commentsRef.limit(10);
+                const db = admin.firestore();
+                const queryComments = db.collection('comments').limit(10);
 
                 await queryComments
                     .get()
                     .then((snapshot) => {
                         if (snapshot.empty) {
-                            console.log(`> [INF] No matching documents`);
+                            console.log(`> [INF] No comment documents`);
                         }
 
                         let comments = [];
                         snapshot.forEach((doc) => {
-                            comments.push(doc.data());
+                            const id = doc.id;
+                            const c = {
+                                id,
+                                ...doc.data(),
+                            };
+                            comments.push(c);
                         });
                         console.log(
-                            `> [INF] Comment documents list data: found(${comments.length})`,
+                            `> [INF] Comment documents data: found(${comments.length})`,
                         );
                         ctx.body = {
-                            comments: [...comments],
+                            comments,
                         };
                     })
                     .catch((err) => {

@@ -1,19 +1,16 @@
 import React from 'react';
 import App from 'next/app';
 import Head from 'next/head';
+
 import { AppProvider } from '@shopify/polaris';
 import '@shopify/polaris/dist/styles.css';
-import translations from '@shopify/polaris/locales/en.json';
 
+import translations from '@shopify/polaris/locales/en.json';
 import { RecoilRoot } from 'recoil';
 
 class MyApp extends App {
     render () {
         const { Component, pageProps } = this.props;
-
-        const config = {
-            forceRedirect: false
-        };
 
         return (
             <React.Fragment>

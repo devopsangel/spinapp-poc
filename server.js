@@ -6,7 +6,7 @@ const next = require('next');
 const Koa = require('koa');
 const session = require('koa-session');
 const logger = require('koa-logger');
-const bodyParser = require('koa-bodyparser');
+// const bodyParser = require('koa-bodyparser');
 
 const Router = require('koa-router');
 const dataRouter = require('./server/routes/data')(Router);
