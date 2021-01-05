@@ -33,7 +33,8 @@ const Home = () => {
             try {
                 setInitializing(true);
 
-                await fetch(`${APP_HOST}/data/comments`)
+                // await fetch(`${APP_HOST}/data/comments`)
+                await fetch(`/data/comments`)
                     .then((resp) => resp.json())
                     .then((data) => setComments(data.comments));
             } catch (e) {
@@ -72,7 +73,7 @@ const Home = () => {
 
     return (
         <React.Fragment>
-            <Page fullWidth={true}>
+            <Page fullWidth={false}>
                 {initializing && (
                     <Layout>
                         <Frame>

@@ -1,6 +1,8 @@
 FROM node:14.13.1-buster
 
-LABEL maintainer="docker@spin.app"
+LABEL maintainer="shipper@spin.app"
+
+ARG SRC_DIR=.
 
 COPY  $SRC_DIR /server
 WORKDIR /server
