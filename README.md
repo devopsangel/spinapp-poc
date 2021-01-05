@@ -1,6 +1,6 @@
 # Spin App
 
-Poc for Firestore
+Poc NextJS/Firestore
 
 ## About
 
