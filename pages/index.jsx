@@ -1,16 +1,19 @@
 import React, { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
-import { Layout, Page, Loading, Frame } from '@shopify/polaris';
 import {
-    initializing,
-    error,
+    Layout,
+    Page,
+    Loading,
+    Frame
+} from '@shopify/polaris';
+import {
+    initializingState,
+    errorState,
     commentsState
 } from '../store';
 
 //components
-// import BlockedStore from '../components/BlockedStore';
-// import LoadingStoreData from '../components/LoadingStoreData';
-// import AgedProducts from '../components/AgedProducts';
+import CommentCard from '../components/CommentCard';
 
 const centerStyle = {
     height: '100vh',
@@ -32,7 +35,7 @@ const Home = () => {
 
                 await fetch(`${APP_HOST}/data/comments`)
                     .then((resp) => resp.json())
-                    .then((data) => setComments(data));
+                    .then((data) => setComments(data.comments));
             } catch (e) {
                 if (e.response) {
                     setError(
@@ -45,14 +48,27 @@ const Home = () => {
                 setInitializing(false);
             }
         };
-
         fetchAll();
     }, []);
 
+    // Make sure data is fetched
     const hasAllData = comments;
 
     // checking data
-    console.log('Comments: ', comments);
+    console.log('[INFO] Fetched comments: ', comments);
+    const cards = [];
+    comments.forEach((comment = {}) => {
+                const { id } = comment;
+                cards.push(
+                    <Layout.Section key={id} oneThird>
+                        <CommentCard
+                            {...comment}
+                            onEdit={() => {}}
+                            onGenerateInvoice={() => {}}
+                        />
+                    </Layout.Section>
+                );
+    });
 
     return (
         <React.Fragment>
@@ -71,13 +87,7 @@ const Home = () => {
                 )}
                 {!initializing && !error && hasAllData && (
                     <Layout>
-                        {shop.partnerDevelopment ? (
-                            <BlockedStore />
-                        ) : !shop.loadCompleted ? (
-                            <LoadingStoreData />
-                        ) : (
-                            < AgedProducts />
-                        )}
+                        {cards}
                     </Layout>
                 )}
             </Page>

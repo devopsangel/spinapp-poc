@@ -1,6 +1,8 @@
 require('dotenv').config();
 const webpack = require('webpack');
 
+const appHost = JSON.stringify(process.env.APP_HOST);
+
 module.exports = {
     devIndicators: {
         autoPrerender: false,

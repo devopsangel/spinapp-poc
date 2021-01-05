@@ -1,14 +1,17 @@
 import React from 'react';
-import { Card, TextContainer } from '@shopify/polaris';
+import {
+    Card,
+    TextContainer
+} from '@shopify/polaris';
 
-const ChartCard = ({ image, name, description, onEdit, onInvoice }) => {
+const CommentCard = ({ image, name, description, onEdit, onDelete }) => {
     return (
         <Card
             title={name}
             actions={[
                 {
-                    content: 'Invoice',
-                    onAction: onInvoice
+                    content: 'Delete',
+                    onAction: onDelete
                 },
                 {
                     content: 'Edit',
@@ -26,14 +29,14 @@ const ChartCard = ({ image, name, description, onEdit, onInvoice }) => {
                         padding: '1.6rem'
                     }}
                 >
-                    <img alt='consigner' src={image} width='100%' />
+                    <img alt='spinapp' src={image} width='100%' />
                 </div>
                 <div style={{ flex: 1, padding: '1.6rem' }}>
                     <TextContainer>
                         <p
                             style={{
-                                height: '80px',
-                                maxHeight: '80px',
+                                height: '200px',
+                                maxHeight: '200px',
                                 overflowX: 'auto'
                             }}
                         >
@@ -46,4 +49,4 @@ const ChartCard = ({ image, name, description, onEdit, onInvoice }) => {
     );
 };
 
-export default ChartCard;
+export default CommentCard;

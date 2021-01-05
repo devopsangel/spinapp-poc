@@ -6,7 +6,7 @@ const next = require('next');
 const Koa = require('koa');
 const session = require('koa-session');
 const logger = require('koa-logger');
-const bodyParser = require('koa-bodyparser');
+// const bodyParser = require('koa-bodyparser');
 
 const Router = require('koa-router');
 const dataRouter = require('./server/routes/data')(Router);
@@ -25,11 +25,10 @@ app.prepare().then(() => {
     server.use(session({ sameSite: 'none', secure: true }, server));
 
     // data routes
-    server.use(bodyParser());
     server.use(dataRouter.routes());
     server.use(dataRouter.allowedMethods());
 
-    router.get('(.*)', verifyRequest(), async (ctx) => {
+    router.get('(.*)', async (ctx) => {
         await handle(ctx.req, ctx.res);
         ctx.respond = false;
         ctx.res.statusCode = 200;

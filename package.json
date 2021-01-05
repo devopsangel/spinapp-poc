@@ -13,8 +13,7 @@
         "type": "git",
         "url": "git+git@github.com:zoocom/turtle.git"
     },
-    "keywords": [
-    ],
+    "keywords": [],
     "author": "Spinapp Team",
     "license": "ISC",
     "dependencies": {
@@ -44,9 +43,9 @@
         "next": "^10.0.4",
         "number-abbreviate": "^2.0.0",
         "qs": "^6.9.4",
-        "react": "^17.01.1",
+        "react": "^17.0.1",
         "react-apollo": "^3.1.5",
-        "react-dom": "^17.01.1",
+        "react-dom": "^17.0.1",
         "recoil": "0.1.2",
         "store-js": "^2.0.4"
     },
