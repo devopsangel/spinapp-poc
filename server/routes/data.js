@@ -38,7 +38,7 @@ module.exports = (Router) => {
                             comments.push(c);
                         });
                         console.log(
-                            `> [INF] Comment documents data: found(${comments.length})`,
+                            `> [INF] Comment documents data list: found(${comments.length})`,
                         );
                         ctx.body = {
                             comments,
