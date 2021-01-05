@@ -1,6 +1,7 @@
 substitutions:
   _APP_HOST: ""
-  _APP_SCOPE: ""
+  _FIREBASE_DATABASE_URL: ""
+  _FIREBASE_PROJECT_ID: ""
   _NODE_ENV: ""
 
 options:
