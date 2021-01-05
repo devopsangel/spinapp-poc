@@ -10,6 +10,7 @@ module.exports = {
     webpack: (config) => {
         const env = { APP_HOST: appHost };
         config.plugins.push(new webpack.DefinePlugin(env));
+
         return config;
     },
 };
